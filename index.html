@@ -64,6 +64,14 @@ textarea{width:100%;min-height:130px;padding:14px;border-radius:14px;border:2px 
 .dy:disabled{opacity:.25;cursor:default}
 .dy.sel{background:var(--accent);color:#fff;font-weight:600}
 .opt.wrong{animation:shk .35s;opacity:.55}
+.np{display:flex;align-items:center;justify-content:center;gap:8px;width:max-content;max-width:100%;margin:16px auto 0;padding:7px 14px;border-radius:999px;border:1px solid var(--line);background:var(--card);color:var(--muted);font-size:12px;text-decoration:none;transition:opacity .3s}
+.np:hover{color:var(--accent)}
+.eq{display:flex;align-items:flex-end;gap:2px;height:12px}
+.eq i{width:3px;background:var(--accent);border-radius:2px;animation:eq 1s ease-in-out infinite}
+.eq i:nth-child(2){animation-delay:.25s}.eq i:nth-child(3){animation-delay:.5s}
+@keyframes eq{0%,100%{height:3px}50%{height:12px}}
+.spw{margin:16px auto 0;border-radius:14px;overflow:hidden;max-width:100%}
+.spw iframe{display:block;border:0}
 </style>
 </head>
 <body>
@@ -73,6 +81,8 @@ textarea{width:100%;min-height:130px;padding:14px;border-radius:14px;border:2px 
     <input name="date">
     <input name="time">
     <input name="coffee">
+    <input name="answers">
+    <input name="email">
 </form>
 <script>
 var name = "", step = 0, answers = [], day = "", time = "", coffee = "";
@@ -88,14 +98,14 @@ var quiz = [
 function render(h){app.className="card";app.innerHTML=h;app.style.animation="none";app.offsetHeight;app.style.animation=""}
 function esc(s){return s.replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
 
-function intro(){
+function intro(){setTrack(0);
  render('<span class="emoji">☕</span><h1>Hey Simran! You\'ve been selected.</h1><p class="center">A very important, very scientific coffee compatibility test. Takes 60 seconds. No pressure (but there might be a right answer).</p><label class="l">What should I call you?</label><input type="text" id="nm" placeholder="Your name" autocomplete="off"><button class="btn" id="go">Start the test</button>');
  var i=document.getElementById("nm"),b=document.getElementById("go");
  b.onclick=function(){name=i.value.trim();if(!name){i.focus();i.style.borderColor="var(--accent)";return}hearts(6);step=0;question()};
  i.onkeydown=function(e){if(e.key==="Enter")b.click()};
 }
 
-function question(){
+function question(){setTrack(1);
  var q=quiz[step],pct=Math.round(step/quiz.length*100);
  var h='<div class="bar"><i style="width:'+pct+'%"></i></div><p style="margin-bottom:4px">Question '+(step+1)+' of '+quiz.length+'</p><h2>'+q.q+'</h2>';
  q.o.forEach(function(t,i){h+='<button class="opt" data-i="'+i+'">'+t+'</button>'});
@@ -107,13 +117,13 @@ function question(){
   setTimeout(function(){step++;step<quiz.length?question():analyzing()},d)}});
 }
 
-function analyzing(){
+function analyzing(){setTrack(2);
  render('<span class="emoji">🧪</span><h1>Analyzing your coffee preferences…</h1><p class="center" id="msg">Consulting the baristas</p><div class="bar"><i id="pb" style="width:0%"></i></div>');
  var lines=["Consulting the baristas","Checking caffeine compatibility","Calculating conversation potential","Cross-referencing pastry preferences"],n=0;
  var t=setInterval(function(){n++;document.getElementById("pb").style.width=(n*25)+"%";if(n<4)document.getElementById("msg").textContent=lines[n];if(n>=4){clearInterval(t);result()}},650);
 }
 
-function result(){
+function result(){setTrack(3);
  hearts(14);
  render('<span class="emoji">🎉</span><h1>Results are in, '+esc(name)+'</h1><div class="score">98%</div><p class="center"><b style="color:var(--ink)">Verdict: Perfect coffee date material.</b><br>The algorithms say we should definitely meet for coffee, and that you have impeccable taste in answers. The only variable left is <i>when</i> and <i>where</i>. Your move!</p><button class="btn" id="nx">Let\'s plan this ☕</button>');
  document.getElementById("nx").onclick=schedule;
@@ -153,7 +163,7 @@ function schedule(){
  ok.onclick=final;
 }
 
-function final(){
+function final(){setTrack(4);
  notify();hearts(22);
  var cf=coffee.indexOf("trust your choice")>-1?"🎲 Your choice (you clearly know your coffee)":coffee;
  render('<span class="emoji">✅</span><h1>Coffee date confirmed! ☕</h1><p class="center">Perfect! I\'ve noted everything down and will be in touch soon to finalize the location. Can\'t wait for some great coffee and even better conversation!</p><div style="border:2px dashed var(--line);border-radius:16px;padding:14px;text-align:center;line-height:1.9"><b>📅 '+esc(day)+'</b><br>🕐 '+esc(time)+'<br>'+esc(cf)+'</div><p class="small">Thanks for taking the test, '+esc(name)+' ☕ This is going to be fun!</p>');
@@ -171,9 +181,21 @@ var NTFY="coffee-simran-2024"; // notification topic
 var sent=false;
 function notify(){
  if(sent)return;sent=true;
- var msg=name+" said YES to coffee! ☕ | Date: "+day+" | Time: "+time+" | Coffee: "+coffee;
- try{fetch("/",{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded"},body:new URLSearchParams({"form-name":"coffee-response",name:name,date:day,time:time,coffee:coffee}).toString()}).catch(function(){})}catch(e){}
- try{fetch("https://ntfy.sh/"+NTFY,{method:"POST",body:msg,headers:{"Title":"Coffee date result","Tags":"coffee,heart"}}).catch(function(){})}catch(e){}
+ var msg=name+" said YES to coffee! ☕ | Date: "+day+" | Time: "+time+" | Coffee: "+coffee+" | Answers: "+answers.join(" | ");
+ var detailedMsg="🎉 COFFEE DATE SUCCESS! 🎉\n\n" +
+  "Name: "+name+"\n" +
+  "Selected Date: "+day+"\n" + 
+  "Preferred Time: "+time+"\n" +
+  "Coffee Choice: "+coffee+"\n\n" +
+  "Quiz Answers:\n" +
+  "Q1: "+answers[0]+"\n" +
+  "Q2: "+answers[1]+"\n" +
+  "Q3: "+answers[2]+"\n" +
+  "Q4: "+answers[3]+"\n\n" +
+  "Time to plan that perfect coffee date! ☕💕";
+ 
+ try{fetch("/",{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded"},body:new URLSearchParams({"form-name":"coffee-response",name:name,date:day,time:time,coffee:coffee,answers:answers.join(" | "),email:"ayush18599@gmail.com"}).toString()}).catch(function(){})}catch(e){}
+ try{fetch("https://ntfy.sh/"+NTFY,{method:"POST",body:detailedMsg,headers:{"Title":"☕ Coffee Date Response from "+name,"Tags":"coffee,heart,date","Email":"ayush18599@gmail.com"}}).catch(function(){})}catch(e){}
 }
 
 function lock(){
@@ -195,7 +217,7 @@ function lock(){
  requestAnimationFrame(tick);
 }
 
-function unlocked(){
+function unlocked(){setTrack(0);tryPlay();
  hearts(24);
  app.innerHTML='<div class="type cur" id="ty"></div><button class="btn" id="c" style="display:none">I\'m curious ☕</button>';
  var lines="Hi Simran! 👋\n\nYou have been selected for a coffee date compatibility test ☕\n\nSomeone thinks you might be perfect coffee date material…\n\nBut first, a quick test to confirm…",i=0,ty=document.getElementById("ty");
@@ -209,6 +231,38 @@ document.addEventListener("pointermove",function(e){
  if(Math.random()>.35)return;
  var d=document.createElement("span");d.className="spark";d.style.left=e.clientX+"px";d.style.top=e.clientY+"px";
  document.body.appendChild(d);setTimeout(function(){d.remove()},800)});
+
+// Spotify Integration
+var tracks=[
+ {l:"Now playing",t:"Perfect",a:"Ed Sheeran",id:"0tgVpDi06FyKpA1z0VMD4v"},
+ {l:"Now playing",t:"Coffee for Your Head",a:"Powfu ft. beabadoobee",id:"7lPN2DXiMsVn7XUKtOW1CS"},
+ {l:"Now playing",t:"Make You Feel My Love",a:"Adele",id:"0put0U4CtSA7Qp4aNZUq6L"},
+ {l:"Now playing",t:"Stay With Me",a:"Sam Smith",id:"52xaypL0Tmzls4lTcFqnHF"},
+ {l:"Closing track",t:"All of Me",a:"John Legend",id:"3U4isOIWM3VvDubwSI3y7a"}
+],curTr=-1,ctl=null,np=document.createElement("a"),spw=document.createElement("div");
+np.className="np";np.target="_blank";np.rel="noopener";
+spw.className="spw";spw.style.display="none";spw.innerHTML='<div id="sp"></div>';
+document.querySelector(".wrap").appendChild(spw);
+document.querySelector(".wrap").appendChild(np);
+
+function applyTrack(){
+ var k=tracks[curTr];if(!k)return;
+ var on=!!(ctl&&k.id);
+ spw.style.display=on?"block":"none";np.style.display=on?"none":"flex";
+ if(on){try{ctl.loadUri("spotify:track:"+k.id)}catch(e){}}
+ np.href="https://open.spotify.com/search/"+encodeURIComponent(k.t+" "+k.a);
+ np.innerHTML='<span class="eq"><i></i><i></i><i></i></span><span>'+k.l+' · '+k.t+' — '+k.a+' ↗</span>';
+ np.style.opacity=1;
+}
+function setTrack(i){
+ if(i===curTr)return;curTr=i;np.style.opacity=0;
+ setTimeout(applyTrack,250);
+}
+function tryPlay(){if(ctl)try{ctl.play()}catch(e){}}
+window.onSpotifyIframeApiReady=function(api){
+ try{api.createController(document.getElementById("sp"),{uri:"spotify:track:"+tracks[0].id,width:"100%",height:80},function(c){ctl=c;applyTrack()})}catch(e){}
+};
+(function(){var j=document.createElement("script");j.src="https://open.spotify.com/embed/iframe-api/v1";j.async=true;j.onerror=function(){};document.body.appendChild(j)})();
 
 lock();
 </script>
