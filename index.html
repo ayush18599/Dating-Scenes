@@ -152,14 +152,14 @@ function analyzing(){setTrack(4); // Use closing track for analysis
  var t=setInterval(function(){n++;document.getElementById("pb").style.width=(n*25)+"%";if(n<4)document.getElementById("msg").textContent=lines[n];if(n>=4){clearInterval(t);result()}},650);
 }
 
-function result(){setTrack(4); // Keep closing track for results
+function result(){setTrack(5); // Use Baby Keem "16" for results onwards
  hearts(14);
  render('<span class="emoji">🎉</span><h1>Results are in, '+esc(name)+'</h1><div class="score">98%</div><p class="center"><b style="color:var(--ink)">Verdict: We\'d have an amazing coffee date.</b><br>The algorithms say we should definitely meet for coffee, and that you have impeccable taste in answers. The only variable left is <i>when</i> and <i>where</i>. Your move!</p><button class="btn" id="nx">Let\'s plan this ☕</button>');
  document.getElementById("nx").onclick=schedule;
 }
 
-function schedule(){setTrack(4); // Keep closing track for scheduling
- var times=["Morning coffee (10-11 AM)","Afternoon break (2-3 PM)","Evening coffee (7-8 PM)"];
+function schedule(){setTrack(5); // Continue Baby Keem "16" for scheduling
+ var times=["Morning coffee (10-11 AM)","Afternoon break (2-3 PM)","Evening coffee (after 7 PM)"];
  var h='<h2>Perfect! Let\'s lock in the details</h2><label class="l">Which day works for you?</label><div id="cal" class="cal"></div><label class="l">What time suits you best?</label><div class="chips" id="t">';
  times.forEach(function(x){h+='<button class="chip" data-v="'+x+'">'+x+'</button>'});
  h+='</div><button class="btn" id="ok" disabled>It\'s a date! ☕</button>';
@@ -400,25 +400,53 @@ function lock(){
  requestAnimationFrame(tick);
 }
 
-function unlocked(){setTrack(0);
+function unlocked(){
+ setTrack(0);
  hearts(24);
  
- // Aggressively try to start music immediately
- setTimeout(function(){tryPlay()}, 100);
- setTimeout(function(){tryPlay()}, 500);
- setTimeout(function(){tryPlay()}, 1000);
+ // VERY aggressive autoplay attempts
+ var playAttempts = 0;
+ var maxAttempts = 10;
+ 
+ function attemptPlay() {
+   if(playAttempts < maxAttempts && ctl) {
+     try {
+       console.log("🎵 Autoplay attempt " + (playAttempts + 1));
+       ctl.play();
+       playAttempts++;
+       if(playAttempts < maxAttempts) {
+         setTimeout(attemptPlay, 200 * playAttempts);
+       }
+     } catch(e) {
+       console.log("❌ Autoplay attempt " + (playAttempts + 1) + " failed:", e);
+       playAttempts++;
+       setTimeout(attemptPlay, 500 * playAttempts);
+     }
+   }
+ }
+ 
+ // Start aggressive autoplay attempts
+ setTimeout(attemptPlay, 100);
  
  app.innerHTML='<div class="type cur" id="ty"></div><button class="btn" id="c" style="display:none">I\'m curious ☕</button>';
  var lines="Hi Simran! 👋\n\nYou have been selected for a coffee date compatibility test ☕\n\nSomeone thinks we might have great chemistry over coffee…\n\nBut first, a quick test to confirm…",i=0,ty=document.getElementById("ty");
  (function nx(){
-  if(i<=lines.length){ty.innerHTML=esc(lines.slice(0,i)).replace(/\n/g,"<br>");i++;setTimeout(nx,lines[i-2]==="\n"?250:45)}
-  else{ty.classList.remove("cur");var b=document.getElementById("c");b.style.display="block";
+  if(i<=lines.length){
+   ty.innerHTML=esc(lines.slice(0,i)).replace(/\n/g,"<br>");
+   i++;
+   // Try to play during typing animation
+   if(i % 10 === 0) attemptPlay();
+   setTimeout(nx,lines[i-2]==="\n"?250:45);
+  } else {
+   ty.classList.remove("cur");
+   var b=document.getElementById("c");
+   b.style.display="block";
    b.onclick=function(){
-     // Try to start music with user interaction
-     setTimeout(function(){tryPlay()}, 200);
-     setTimeout(function(){tryPlay()}, 500);
+     // Final attempt with user interaction
+     setTimeout(function(){attemptPlay();tryPlay()}, 100);
      intro();
-   }}
+   }
+  }
  })();
 }
 
@@ -434,7 +462,7 @@ var tracks=[
  {l:"Now playing",t:"I Adore You",a:"HUGEL, Topic, Arash ft. Daecolm",id:"5nPbKG04fhLkIAjcPFaZq7"},
  {l:"Now playing",t:"Hold On, We're Going Home",a:"Drake ft. Majid Jordan",id:"7nBFpFa8ZFMUqzwPmWaD6u"},
  {l:"Now playing",t:"Breathe Deeper",a:"Tame Impala",id:"3jPYBYxDe4hHhMWjCMZZZc"},
- {l:"Closing track",t:"16",a:"Baby Keem",id:"1Is8hGpkGMiePASAxBluxM"}
+ {l:"Closing track",t:"16",a:"Baby Keem",id:"5FkoSXiJPKTNyYgALRJFhD"}
 ],curTr=-1,ctl=null,np=document.createElement("a"),spw=document.createElement("div");
 np.className="np";np.target="_blank";np.rel="noopener";
 spw.className="spw";spw.style.display="none";spw.innerHTML='<div id="sp"></div>';
