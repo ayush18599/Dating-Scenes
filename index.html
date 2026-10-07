@@ -3,6 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="format-detection" content="telephone=no">
 <title>The Coffee Compatibility Test</title>
 <link rel="preload" href="https://open.spotify.com/embed/iframe-api/v1" as="script">
 <link rel="dns-prefetch" href="https://ntfy.sh">
@@ -123,6 +127,7 @@ function intro(){setTrack(0);
 function question(){
  // Set track based on current question step
  var questionTrack = step + 1; // Questions use tracks 1-4
+ console.log("🎵 Setting track " + questionTrack + " for question " + (step + 1));
  setTrack(questionTrack);
  
  var q=quiz[step],pct=Math.round(step/quiz.length*100);
@@ -135,12 +140,22 @@ function question(){
   setTimeout(function(){tryPlay()}, 100);
   if(step===0){t=app.querySelector('.opt[data-i="3"]');if(t!==b){b.classList.add("wrong");d=900}}
   t.classList.add("sel");answers[step]=t.textContent;
+  
   setTimeout(function(){
    step++;
    if(step<quiz.length){
-    question(); // Next question (will set new track)
+    // Force track change with delay to ensure new song loads
+    console.log("🎵 Moving to next question, will change track");
+    setTimeout(function(){
+     question(); // Next question (will set new track)
+     setTimeout(function(){tryPlay()}, 200); // Try to play new track
+    }, 100);
    } else {
-    analyzing(); // Move to analysis
+    console.log("🎵 Moving to analysis phase");
+    setTimeout(function(){
+     analyzing(); // Move to analysis
+     setTimeout(function(){tryPlay()}, 200);
+    }, 100);
    }
   },d);
  }});
@@ -462,7 +477,7 @@ var tracks=[
  {l:"Now playing",t:"I Adore You",a:"HUGEL, Topic, Arash ft. Daecolm",id:"5nPbKG04fhLkIAjcPFaZq7"},
  {l:"Now playing",t:"Hold On, We're Going Home",a:"Drake ft. Majid Jordan",id:"7nBFpFa8ZFMUqzwPmWaD6u"},
  {l:"Now playing",t:"Breathe Deeper",a:"Tame Impala",id:"3jPYBYxDe4hHhMWjCMZZZc"},
- {l:"Closing track",t:"16",a:"Baby Keem",id:"5FkoSXiJPKTNyYgALRJFhD"}
+ {l:"Closing track",t:"16",a:"Baby Keem",id:"4EVpmkEwrLYEcwArIlWnHB"}
 ],curTr=-1,ctl=null,np=document.createElement("a"),spw=document.createElement("div");
 np.className="np";np.target="_blank";np.rel="noopener";
 spw.className="spw";spw.style.display="none";spw.innerHTML='<div id="sp"></div>';
@@ -487,8 +502,19 @@ function applyTrack(){
  np.style.opacity=1;
 }
 function setTrack(i){
- if(i===curTr)return;curTr=i;np.style.opacity=0;
- setTimeout(applyTrack,250);
+ if(i===curTr){
+   console.log("🎵 Track " + i + " already playing, trying to resume");
+   setTimeout(function(){tryPlay()}, 100);
+   return;
+ }
+ console.log("🎵 Changing from track " + curTr + " to track " + i);
+ curTr=i;
+ np.style.opacity=0;
+ setTimeout(function(){
+   applyTrack();
+   // Try to play new track after it loads
+   setTimeout(function(){tryPlay()}, 300);
+ }, 250);
 }
 function tryPlay(){
  if(ctl){

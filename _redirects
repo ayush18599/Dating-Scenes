@@ -1,0 +1,6 @@
+# Netlify redirects file
+/*    /index.html   200
+
+# Ensure mobile access works
+/index.html  /index.html  200
+/  /index.html  200
