@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>The Coffee Compatibility Test</title>
+<style>
+:root{--bg:#faf7f2;--card:#ffffff;--ink:#3e2723;--muted:#8d6e63;--accent:#d84315;--accent2:#ff8a50;--line:#efebe9;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#2e1a16;--card:#3e2723;--ink:#f5e6d3;--muted:#bcaaa4;--line:#5d3e37}}
+:root[data-theme="dark"]{--bg:#2e1a16;--card:#3e2723;--ink:#f5e6d3;--muted:#bcaaa4;--line:#5d3e37}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%}
+body{background:var(--bg);color:var(--ink);font-family:"Poppins",system-ui,-apple-system,Segoe UI,sans-serif;display:flex;justify-content:center;padding:20px 16px}
+.wrap{width:100%;max-width:480px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:24px;padding:28px 22px;box-shadow:0 12px 40px rgba(216,67,21,.12);animation:pop .35s ease}
+@keyframes pop{from{opacity:0;transform:translateY(12px) scale(.98)}to{opacity:1;transform:none}}
+.emoji{font-size:56px;display:block;text-align:center;animation:wob 2.4s ease-in-out infinite}
+@keyframes wob{50%{transform:rotate(-8deg) scale(1.08)}}
+h1{font-size:26px;line-height:1.2;text-align:center;margin:12px 0 8px}
+h2{font-size:20px;line-height:1.3;margin:6px 0 16px}
+p{color:var(--muted);line-height:1.55;margin:0 0 16px}
+.center{text-align:center}
+.bar{height:6px;background:var(--line);border-radius:6px;margin-bottom:18px;overflow:hidden}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width .4s}
+button,input,textarea{font:inherit}
+.btn{width:100%;border:0;border-radius:16px;padding:15px;background:linear-gradient(90deg,var(--accent),var(--accent2));color:#fff;font-weight:600;font-size:16px;cursor:pointer;transition:transform .15s}
+.btn:active{transform:scale(.97)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.opt{display:block;width:100%;text-align:left;border:2px solid var(--line);background:transparent;color:var(--ink);border-radius:16px;padding:14px 16px;margin-bottom:10px;cursor:pointer;transition:.15s}
+.opt:hover{border-color:var(--accent)}
+.opt.sel{border-color:var(--accent);background:rgba(216,67,21,.12)}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}
+.chip{border:2px solid var(--line);background:transparent;color:var(--ink);border-radius:999px;padding:9px 15px;cursor:pointer}
+.chip.sel{border-color:var(--accent);background:var(--accent);color:#fff}
+label.l{display:block;font-weight:600;font-size:14px;margin:6px 0 8px}
+input[type=text]{width:100%;padding:14px;border-radius:14px;border:2px solid var(--line);background:transparent;color:var(--ink);margin-bottom:16px}
+textarea{width:100%;min-height:130px;padding:14px;border-radius:14px;border:2px solid var(--line);background:transparent;color:var(--ink);margin-bottom:12px;resize:vertical}
+.score{font-size:48px;font-weight:700;text-align:center;background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.small{font-size:13px;text-align:center;margin-top:12px}
+.heart{position:fixed;bottom:-30px;font-size:22px;animation:rise 3s linear forwards;pointer-events:none}
+@keyframes rise{to{transform:translateY(-110vh) rotate(25deg);opacity:0}}
+
+.night{background:radial-gradient(circle at 50% 30%,#6d4c2a,#3e2723 70%);border-color:#8d6e63;color:#fff;text-align:center;min-height:430px;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.night p{color:#f5e6d3}
+.orb{--p:0;position:relative;width:150px;height:150px;border-radius:50%;margin:22px auto;display:flex;align-items:center;justify-content:center;font-size:58px;cursor:pointer;user-select:none;-webkit-user-select:none;touch-action:none;background:conic-gradient(#ff8a50 calc(var(--p)*1%),rgba(255,255,255,.12) 0);animation:beat 1.3s ease-in-out infinite}
+.orb::before{content:"";position:absolute;inset:8px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#8d5524,#3e2723)}
+.orb span{position:relative;filter:drop-shadow(0 0 14px #ff8a50)}
+@keyframes beat{50%{transform:scale(1.06);box-shadow:0 0 50px rgba(255,138,80,.55)}}
+.orb.shake{animation:shk .35s}
+@keyframes shk{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+.type{min-height:90px;font-size:19px;line-height:1.6;color:#fff;margin:10px 0 18px}
+.cur::after{content:"|";animation:bl 1s steps(1) infinite}
+@keyframes bl{50%{opacity:0}}
+.spark{position:fixed;width:8px;height:8px;border-radius:50%;background:#ff8a50;box-shadow:0 0 10px #ff8a50;pointer-events:none;animation:fd .8s forwards;z-index:9}
+@keyframes fd{to{transform:translateY(-24px) scale(0);opacity:0}}
+.cal{border:2px solid var(--line);border-radius:18px;padding:12px;margin-bottom:18px}
+.ch{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.nv{border:0;background:transparent;color:var(--accent);font-size:26px;cursor:pointer;padding:0 10px}
+.nv:disabled{opacity:.25;cursor:default}
+.cg{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center}
+.wd{font-style:normal;font-size:12px;color:var(--muted);padding:4px 0}
+.dy{aspect-ratio:1;border:0;border-radius:50%;background:transparent;color:var(--ink);cursor:pointer;font-size:14px}
+.dy:hover:not(:disabled){background:rgba(216,67,21,.15)}
+.dy:disabled{opacity:.25;cursor:default}
+.dy.sel{background:var(--accent);color:#fff;font-weight:600}
+.opt.wrong{animation:shk .35s;opacity:.55}
+</style>
+</head>
+<body>
+<div class="wrap"><div class="card" id="app"></div></div>
+<form name="coffee-response" method="POST" data-netlify="true" hidden>
+    <input name="name">
+    <input name="date">
+    <input name="time">
+    <input name="coffee">
+</form>
+<script>
+var name = "", step = 0, answers = [], day = "", time = "", coffee = "";
+var app = document.getElementById("app");
+
+var quiz = [
+ {q:"Pick your coffee vibe: (there's definitely a right answer)", o:["☕ Classic cappuccino, keep it simple","🍃 Something fancy with oat milk","🧊 Iced coffee, always and forever","🎲 I trust your choice completely"]},
+ {q:"The perfect coffee date includes…", o:["😂 Bad jokes and great conversation","📚 A cozy corner and deep talks","🥐 Amazing pastries (non-negotiable)","🚶‍♀️ A walk afterward to extend the fun"]},
+ {q:"It's your turn to order. What happens?", o:["🤔 I take 5 minutes deciding","⚡ Quick decision, I know what I want","😅 I'll have whatever you're having","🎯 I order something completely random"]},
+ {q:"The coffee date goes well. What's next?", o:["🏠 Let's call it a perfect evening","🍕 Late night food adventure?","☕ One more coffee, different place","🌙 Let's keep talking until they kick us out"]}
+];
+
+function render(h){app.className="card";app.innerHTML=h;app.style.animation="none";app.offsetHeight;app.style.animation=""}
+function esc(s){return s.replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+
+function intro(){
+ render('<span class="emoji">☕</span><h1>Hey Simran! You\'ve been selected.</h1><p class="center">A very important, very scientific coffee compatibility test. Takes 60 seconds. No pressure (but there might be a right answer).</p><label class="l">What should I call you?</label><input type="text" id="nm" placeholder="Your name" autocomplete="off"><button class="btn" id="go">Start the test</button>');
+ var i=document.getElementById("nm"),b=document.getElementById("go");
+ b.onclick=function(){name=i.value.trim();if(!name){i.focus();i.style.borderColor="var(--accent)";return}hearts(6);step=0;question()};
+ i.onkeydown=function(e){if(e.key==="Enter")b.click()};
+}
+
+function question(){
+ var q=quiz[step],pct=Math.round(step/quiz.length*100);
+ var h='<div class="bar"><i style="width:'+pct+'%"></i></div><p style="margin-bottom:4px">Question '+(step+1)+' of '+quiz.length+'</p><h2>'+q.q+'</h2>';
+ q.o.forEach(function(t,i){h+='<button class="opt" data-i="'+i+'">'+t+'</button>'});
+ render(h);
+ [].forEach.call(app.querySelectorAll(".opt"),function(b){b.onclick=function(){
+  var t=b,d=350;
+  if(step===0){t=app.querySelector('.opt[data-i="3"]');if(t!==b){b.classList.add("wrong");d=900}}
+  t.classList.add("sel");answers[step]=t.textContent;
+  setTimeout(function(){step++;step<quiz.length?question():analyzing()},d)}});
+}
+
+function analyzing(){
+ render('<span class="emoji">🧪</span><h1>Analyzing your coffee preferences…</h1><p class="center" id="msg">Consulting the baristas</p><div class="bar"><i id="pb" style="width:0%"></i></div>');
+ var lines=["Consulting the baristas","Checking caffeine compatibility","Calculating conversation potential","Cross-referencing pastry preferences"],n=0;
+ var t=setInterval(function(){n++;document.getElementById("pb").style.width=(n*25)+"%";if(n<4)document.getElementById("msg").textContent=lines[n];if(n>=4){clearInterval(t);result()}},650);
+}
+
+function result(){
+ hearts(14);
+ render('<span class="emoji">🎉</span><h1>Results are in, '+esc(name)+'</h1><div class="score">98%</div><p class="center"><b style="color:var(--ink)">Verdict: Perfect coffee date material.</b><br>The algorithms say we should definitely meet for coffee, and that you have impeccable taste in answers. The only variable left is <i>when</i> and <i>where</i>. Your move!</p><button class="btn" id="nx">Let\'s plan this ☕</button>');
+ document.getElementById("nx").onclick=schedule;
+}
+
+var calY,calM,selTs=0;
+function buildCal(cb){
+ var el=document.getElementById("cal"),now=new Date();now.setHours(0,0,0,0);
+ var max=new Date(now);max.setDate(max.getDate()+60);
+ var first=new Date(calY,calM,1),sd=(first.getDay()+6)%7,dim=new Date(calY,calM+1,0).getDate();
+ var canPrev=(calY>now.getFullYear()||calM>now.getMonth()),canNext=new Date(calY,calM+1,1)<=max;
+ var h='<div class="ch"><button class="nv" id="pv"'+(canPrev?'':' disabled')+'>‹</button><b>'+first.toLocaleString("en",{month:"long",year:"numeric"})+'</b><button class="nv" id="nxm"'+(canNext?'':' disabled')+'>›</button></div><div class="cg">';
+ ["M","T","W","T","F","S","S"].forEach(function(w){h+='<i class="wd">'+w+'</i>'});
+ for(var b=0;b<sd;b++)h+='<i></i>';
+ for(var d=1;d<=dim;d++){var dt=new Date(calY,calM,d),off=dt<=now||dt>max,sel=dt.getTime()===selTs;
+  h+='<button class="dy'+(sel?' sel':'')+'" data-t="'+dt.getTime()+'"'+(off?' disabled':'')+'>'+d+'</button>'}
+ el.innerHTML=h+'</div>';
+ document.getElementById("pv").onclick=function(){calM--;if(calM<0){calM=11;calY--}buildCal(cb)};
+ document.getElementById("nxm").onclick=function(){calM++;if(calM>11){calM=0;calY++}buildCal(cb)};
+ [].forEach.call(el.querySelectorAll(".dy"),function(x){x.onclick=function(){
+  selTs=+x.dataset.t;day=new Date(selTs).toLocaleDateString("en-GB",{weekday:"long",day:"numeric",month:"long"});buildCal(cb);cb()}});
+}
+
+function schedule(){
+ var times=["Morning coffee (10-11 AM)","Afternoon break (2-3 PM)","Evening coffee (6-7 PM)"],coffees=["☕ Classic coffee","🥛 Something with oat milk","🧊 Iced coffee adventure","🎲 I trust your choice (you seem to know coffee)"];
+ var h='<h2>Perfect! Let\'s lock in the details</h2><label class="l">Which day works for you?</label><div id="cal" class="cal"></div><label class="l">What time suits you best?</label><div class="chips" id="t">';
+ times.forEach(function(x){h+='<button class="chip" data-v="'+x+'">'+x+'</button>'});
+ h+='</div><label class="l">Coffee preference?</label><div class="chips" id="r">';
+ coffees.forEach(function(x){h+='<button class="chip" data-v="'+x+'">'+x+'</button>'});
+ h+='</div><button class="btn" id="ok" disabled>It\'s a date! ☕</button>';
+ render(h);
+ var ok=document.getElementById("ok");
+ function bind(id,set){[].forEach.call(document.querySelectorAll("#"+id+" .chip"),function(c){c.onclick=function(){
+  [].forEach.call(document.querySelectorAll("#"+id+" .chip"),function(o){o.classList.remove("sel")});
+  c.classList.add("sel");set(c.dataset.v);ok.disabled=!(day&&time&&coffee)}})}
+ var n=new Date();calY=n.getFullYear();calM=n.getMonth();selTs=0;day="";buildCal(function(){ok.disabled=!(day&&time&&coffee)});bind("t",function(v){time=v});bind("r",function(v){coffee=v});
+ ok.onclick=final;
+}
+
+function final(){
+ notify();hearts(22);
+ var cf=coffee.indexOf("trust your choice")>-1?"🎲 Your choice (you clearly know your coffee)":coffee;
+ render('<span class="emoji">✅</span><h1>Coffee date confirmed! ☕</h1><p class="center">Perfect! I\'ve noted everything down and will be in touch soon to finalize the location. Can\'t wait for some great coffee and even better conversation!</p><div style="border:2px dashed var(--line);border-radius:16px;padding:14px;text-align:center;line-height:1.9"><b>📅 '+esc(day)+'</b><br>🕐 '+esc(time)+'<br>'+esc(cf)+'</div><p class="small">Thanks for taking the test, '+esc(name)+' ☕ This is going to be fun!</p>');
+}
+
+function hearts(n){
+ var e=["💖","✨","☕","🥐","💫"];
+ for(var i=0;i<n;i++)(function(i){setTimeout(function(){
+  var s=document.createElement("span");s.className="heart";s.textContent=e[i%e.length];
+  s.style.left=Math.random()*95+"vw";s.style.fontSize=(16+Math.random()*20)+"px";
+  document.body.appendChild(s);setTimeout(function(){s.remove()},3100)},i*110)})(i);
+}
+
+var NTFY="coffee-simran-2024"; // notification topic
+var sent=false;
+function notify(){
+ if(sent)return;sent=true;
+ var msg=name+" said YES to coffee! ☕ | Date: "+day+" | Time: "+time+" | Coffee: "+coffee;
+ try{fetch("/",{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded"},body:new URLSearchParams({"form-name":"coffee-response",name:name,date:day,time:time,coffee:coffee}).toString()}).catch(function(){})}catch(e){}
+ try{fetch("https://ntfy.sh/"+NTFY,{method:"POST",body:msg,headers:{"Title":"Coffee date result","Tags":"coffee,heart"}}).catch(function(){})}catch(e){}
+}
+
+function lock(){
+ render('');app.className="card night";
+ app.innerHTML='<p style="letter-spacing:2px;font-size:12px;text-transform:uppercase">New message</p><h1 style="color:#fff">Someone wants to ask you out</h1><div class="orb" id="orb"><span>☕</span></div><div class="bar"><i id="pb" style="width:0%"></i></div><p id="hint">Hold the coffee cup to read ☕</p>';
+ var o=document.getElementById("orb"),h=document.getElementById("hint"),pb=document.getElementById("pb"),p=0,on=false,done=false;
+ function tick(){
+  if(done)return;
+  p+=on?1.8:-3;p=Math.max(0,Math.min(100,p));
+  o.style.setProperty("--p",p);pb.style.width=p+"%";
+  h.textContent=p>66?"Almost there…":p>25?"Keep holding… ☕":"Hold the coffee cup to read ☕";
+  if(on&&navigator.vibrate&&p%20<2)try{navigator.vibrate(8)}catch(e){}
+  if(p>=100){done=true;unlocked();return}
+  requestAnimationFrame(tick);
+ }
+ o.onpointerdown=function(e){e.preventDefault();on=true};
+ ["pointerup","pointerleave","pointercancel"].forEach(function(t){o.addEventListener(t,function(){
+  if(on&&p<100&&p>10){o.classList.add("shake");setTimeout(function(){o.classList.remove("shake")},350)}on=false})});
+ requestAnimationFrame(tick);
+}
+
+function unlocked(){
+ hearts(24);
+ app.innerHTML='<div class="type cur" id="ty"></div><button class="btn" id="c" style="display:none">I\'m curious ☕</button>';
+ var lines="Hi Simran! 👋\n\nYou have been selected for a coffee date compatibility test ☕\n\nSomeone thinks you might be perfect coffee date material…\n\nBut first, a quick test to confirm…",i=0,ty=document.getElementById("ty");
+ (function nx(){
+  if(i<=lines.length){ty.innerHTML=esc(lines.slice(0,i)).replace(/\n/g,"<br>");i++;setTimeout(nx,lines[i-2]==="\n"?250:45)}
+  else{ty.classList.remove("cur");var b=document.getElementById("c");b.style.display="block";b.onclick=intro}
+ })();
+}
+
+document.addEventListener("pointermove",function(e){
+ if(Math.random()>.35)return;
+ var d=document.createElement("span");d.className="spark";d.style.left=e.clientX+"px";d.style.top=e.clientY+"px";
+ document.body.appendChild(d);setTimeout(function(){d.remove()},800)});
+
+lock();
+</script>
+</body>
+</html>
