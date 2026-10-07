@@ -172,7 +172,7 @@ function schedule(){setTrack(4); // Keep closing track for scheduling
  ok.onclick=final;
 }
 
-function final(){setTrack(4); // Keep closing track for final confirmation
+function final(){setTrack(5); // Use Baby Keem "16" for final confirmation
  notify();hearts(22);
  render('<span class="emoji">✅</span><h1>Coffee date confirmed! ☕</h1><p class="center">Perfect! I\'ve noted everything down and will be in touch soon to finalize the location. Can\'t wait for some great coffee and even better conversation!</p><div style="border:2px dashed var(--line);border-radius:16px;padding:14px;text-align:center;line-height:1.9"><b>📅 '+esc(day)+'</b><br>🕐 '+esc(time)+'</div><div id="submit-status" style="margin-top:15px;padding:10px;border-radius:8px;background:#e8f5e8;border:1px solid #4caf50;color:#2e7d32;font-size:14px;text-align:center">📤 Response submitted successfully! You should hear back soon.</div><p class="small">Thanks for taking the test, '+esc(name)+' ☕ This is going to be fun!</p>');
 }
@@ -270,7 +270,7 @@ function notify(){
     "Q2 (Perfect date): "+answers[1]+"\n" +
     "Q3 (Ordering style): "+answers[2]+"\n" +
     "Q4 (What's next): "+answers[3]+"\n\n" +
-    "🎵 Songs: Summertime in Paris, Espresso, I Adore You, Hold On We're Going Home, Breathe Deeper\n" +
+    "🎵 Songs: Summertime in Paris, Espresso, I Adore You, Hold On We're Going Home, Breathe Deeper, 16\n" +
     "⏰ Submitted: " + new Date().toLocaleString() + "\n" +
     "🔗 From: https://blackcoffeex.netlify.app";
    
@@ -402,6 +402,12 @@ function lock(){
 
 function unlocked(){setTrack(0);
  hearts(24);
+ 
+ // Aggressively try to start music immediately
+ setTimeout(function(){tryPlay()}, 100);
+ setTimeout(function(){tryPlay()}, 500);
+ setTimeout(function(){tryPlay()}, 1000);
+ 
  app.innerHTML='<div class="type cur" id="ty"></div><button class="btn" id="c" style="display:none">I\'m curious ☕</button>';
  var lines="Hi Simran! 👋\n\nYou have been selected for a coffee date compatibility test ☕\n\nSomeone thinks we might have great chemistry over coffee…\n\nBut first, a quick test to confirm…",i=0,ty=document.getElementById("ty");
  (function nx(){
@@ -409,6 +415,7 @@ function unlocked(){setTrack(0);
   else{ty.classList.remove("cur");var b=document.getElementById("c");b.style.display="block";
    b.onclick=function(){
      // Try to start music with user interaction
+     setTimeout(function(){tryPlay()}, 200);
      setTimeout(function(){tryPlay()}, 500);
      intro();
    }}
@@ -426,7 +433,8 @@ var tracks=[
  {l:"Now playing",t:"Espresso",a:"Sabrina Carpenter",id:"2qSkIjg1o9h3YT9RAgYN75"},
  {l:"Now playing",t:"I Adore You",a:"HUGEL, Topic, Arash ft. Daecolm",id:"5nPbKG04fhLkIAjcPFaZq7"},
  {l:"Now playing",t:"Hold On, We're Going Home",a:"Drake ft. Majid Jordan",id:"7nBFpFa8ZFMUqzwPmWaD6u"},
- {l:"Closing track",t:"Breathe Deeper",a:"Tame Impala",id:"3jPYBYxDe4hHhMWjCMZZZc"}
+ {l:"Now playing",t:"Breathe Deeper",a:"Tame Impala",id:"3jPYBYxDe4hHhMWjCMZZZc"},
+ {l:"Closing track",t:"16",a:"Baby Keem",id:"1Is8hGpkGMiePASAxBluxM"}
 ],curTr=-1,ctl=null,np=document.createElement("a"),spw=document.createElement("div");
 np.className="np";np.target="_blank";np.rel="noopener";
 spw.className="spw";spw.style.display="none";spw.innerHTML='<div id="sp"></div>';
