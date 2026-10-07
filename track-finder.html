@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Find Baby Keem "16" Spotify ID</title>
+<style>
+body{font-family:system-ui,sans-serif;max-width:600px;margin:40px auto;padding:20px;background:#faf7f2}
+.test-panel{background:white;border:1px solid #efebe9;border-radius:12px;padding:30px;margin:20px 0;box-shadow:0 4px 12px rgba(0,0,0,0.1)}
+button{background:#d84315;color:white;border:none;padding:12px 24px;border-radius:8px;cursor:pointer;margin:5px;min-width:200px}
+.result{margin:10px 0;padding:10px;border-radius:6px;font-size:14px}
+.success{background:#e8f5e8;color:#2e7d32;border:1px solid #4caf50}
+.error{background:#ffebee;color:#c62828;border:1px solid #f44336}
+</style>
+</head>
+<body>
+<div class="test-panel">
+<h2>🔍 Find Correct Baby Keem "16" Track</h2>
+<p>Test different Spotify IDs to find the correct one:</p>
+
+<button onclick="testTrack('1Is8hGpkGMiePASAxBluxM', '1')">Test ID 1</button>
+<button onclick="testTrack('5FkoSXiJPKTNyYgALRJFhD', '2')">Test ID 2</button>
+<button onclick="testTrack('4EVpmkEwrLYEcwArIlWnHB', '3')">Test ID 3</button>
+<button onclick="testTrack('7nBFpFa8ZFMUqzwPmWaD6u', '4')">Test ID 4</button>
+
+<div id="results"></div>
+
+<h3>🎵 Manual Search</h3>
+<p>If none work, search manually:</p>
+<a href="https://open.spotify.com/search/baby%20keem%2016" target="_blank">Search "Baby Keem 16" on Spotify</a>
+
+<h3>📝 How to Get Correct ID:</h3>
+<ol>
+<li>Find Baby Keem's "16" on Spotify</li>
+<li>Right-click → "Share" → "Copy Song Link"</li>
+<li>Extract ID from URL: https://open.spotify.com/track/<strong>ID_HERE</strong></li>
+<li>Update the tracks array in index.html</li>
+</ol>
+</div>
+
+<script>
+function testTrack(id, testNum) {
+  const results = document.getElementById('results');
+  results.innerHTML += `<div class="result">Testing ID ${testNum}: ${id}...</div>`;
+  
+  const iframe = document.createElement('iframe');
+  iframe.src = `https://open.spotify.com/embed/track/${id}?utm_source=generator&autoplay=1&theme=0`;
+  iframe.width = "100%";
+  iframe.height = "152";
+  iframe.style.border = "none";
+  iframe.style.margin = "10px 0";
+  
+  iframe.onload = function() {
+    results.innerHTML += `<div class="result success">✅ ID ${testNum} loaded successfully! This might be the correct track.</div>`;
+  };
+  
+  iframe.onerror = function() {
+    results.innerHTML += `<div class="result error">❌ ID ${testNum} failed to load.</div>`;
+  };
+  
+  results.appendChild(iframe);
+}
+</script>
+</body>
+</html>
