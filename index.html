@@ -76,13 +76,14 @@ textarea{width:100%;min-height:130px;padding:14px;border-radius:14px;border:2px 
 </head>
 <body>
 <div class="wrap"><div class="card" id="app"></div></div>
-<form name="coffee-response" method="POST" data-netlify="true" hidden>
+<form name="coffee-response" method="POST" data-netlify="true" data-netlify-recaptcha="true" hidden>
     <input name="name">
     <input name="date">
     <input name="time">
     <input name="coffee">
     <input name="answers">
     <input name="email">
+    <textarea name="message"></textarea>
 </form>
 <script>
 var name = "", step = 0, answers = [], day = "", time = "", coffee = "";
@@ -123,10 +124,32 @@ function analyzing(){setTrack(2);
  var t=setInterval(function(){n++;document.getElementById("pb").style.width=(n*25)+"%";if(n<4)document.getElementById("msg").textContent=lines[n];if(n>=4){clearInterval(t);result()}},650);
 }
 
-function result(){setTrack(3);
+function result(){setTrack(2);
  hearts(14);
  render('<span class="emoji">🎉</span><h1>Results are in, '+esc(name)+'</h1><div class="score">98%</div><p class="center"><b style="color:var(--ink)">Verdict: Perfect coffee date material.</b><br>The algorithms say we should definitely meet for coffee, and that you have impeccable taste in answers. The only variable left is <i>when</i> and <i>where</i>. Your move!</p><button class="btn" id="nx">Let\'s plan this ☕</button>');
  document.getElementById("nx").onclick=schedule;
+}
+
+function schedule(){setTrack(2);
+ var times=["Morning coffee (10-11 AM)","Afternoon break (2-3 PM)","Evening coffee (6-7 PM)"],coffees=["☕ Classic coffee","🥛 Something with oat milk","🧊 Iced coffee adventure","🎲 I trust your choice (you seem to know coffee)"];
+ var h='<h2>Perfect! Let\'s lock in the details</h2><label class="l">Which day works for you?</label><div id="cal" class="cal"></div><label class="l">What time suits you best?</label><div class="chips" id="t">';
+ times.forEach(function(x){h+='<button class="chip" data-v="'+x+'">'+x+'</button>'});
+ h+='</div><label class="l">Coffee preference?</label><div class="chips" id="r">';
+ coffees.forEach(function(x){h+='<button class="chip" data-v="'+x+'">'+x+'</button>'});
+ h+='</div><button class="btn" id="ok" disabled>It\'s a date! ☕</button>';
+ render(h);
+ var ok=document.getElementById("ok");
+ function bind(id,set){[].forEach.call(document.querySelectorAll("#"+id+" .chip"),function(c){c.onclick=function(){
+  [].forEach.call(document.querySelectorAll("#"+id+" .chip"),function(o){o.classList.remove("sel")});
+  c.classList.add("sel");set(c.dataset.v);ok.disabled=!(day&&time&&coffee)}})}
+ var n=new Date();calY=n.getFullYear();calM=n.getMonth();selTs=0;day="";buildCal(function(){ok.disabled=!(day&&time&&coffee)});bind("t",function(v){time=v});bind("r",function(v){coffee=v});
+ ok.onclick=final;
+}
+
+function final(){setTrack(2);
+ notify();hearts(22);
+ var cf=coffee.indexOf("trust your choice")>-1?"🎲 Your choice (you clearly know your coffee)":coffee;
+ render('<span class="emoji">✅</span><h1>Coffee date confirmed! ☕</h1><p class="center">Perfect! I\'ve noted everything down and will be in touch soon to finalize the location. Can\'t wait for some great coffee and even better conversation!</p><div style="border:2px dashed var(--line);border-radius:16px;padding:14px;text-align:center;line-height:1.9"><b>📅 '+esc(day)+'</b><br>🕐 '+esc(time)+'<br>'+esc(cf)+'</div><p class="small">Thanks for taking the test, '+esc(name)+' ☕ This is going to be fun!</p>');
 }
 
 var calY,calM,selTs=0;
@@ -163,7 +186,7 @@ function schedule(){
  ok.onclick=final;
 }
 
-function final(){setTrack(4);
+function final(){setTrack(2);
  notify();hearts(22);
  var cf=coffee.indexOf("trust your choice")>-1?"🎲 Your choice (you clearly know your coffee)":coffee;
  render('<span class="emoji">✅</span><h1>Coffee date confirmed! ☕</h1><p class="center">Perfect! I\'ve noted everything down and will be in touch soon to finalize the location. Can\'t wait for some great coffee and even better conversation!</p><div style="border:2px dashed var(--line);border-radius:16px;padding:14px;text-align:center;line-height:1.9"><b>📅 '+esc(day)+'</b><br>🕐 '+esc(time)+'<br>'+esc(cf)+'</div><p class="small">Thanks for taking the test, '+esc(name)+' ☕ This is going to be fun!</p>');
@@ -181,7 +204,32 @@ var NTFY="coffee-simran-2024"; // notification topic
 var sent=false;
 function notify(){
  if(sent)return;sent=true;
- var msg=name+" said YES to coffee! ☕ | Date: "+day+" | Time: "+time+" | Coffee: "+coffee+" | Answers: "+answers.join(" | ");
+ var msg="🎉 COFFEE DATE SUCCESS! 🎉 | "+name+" said YES | Date: "+day+" | Time: "+time+" | Coffee: "+coffee;
+ var formData = {
+   "form-name": "coffee-response",
+   "name": name,
+   "date": day,
+   "time": time,
+   "coffee": coffee,
+   "answers": answers.join(" | "),
+   "email": "ayush18599@gmail.com",
+   "message": "Coffee Date Response from " + name + " - All details: " + JSON.stringify({name,day,time,coffee,answers})
+ };
+ 
+ // Enhanced Netlify form submission
+ try{
+   fetch("/", {
+     method: "POST",
+     headers: {"Content-Type": "application/x-www-form-urlencoded"},
+     body: new URLSearchParams(formData).toString()
+   }).then(response => {
+     console.log("Form submitted successfully:", response.status);
+   }).catch(error => {
+     console.log("Form submission error:", error);
+   });
+ }catch(e){console.log("Form error:", e)}
+ 
+ // Backup ntfy notification
  var detailedMsg="🎉 COFFEE DATE SUCCESS! 🎉\n\n" +
   "Name: "+name+"\n" +
   "Selected Date: "+day+"\n" + 
@@ -194,8 +242,7 @@ function notify(){
   "Q4: "+answers[3]+"\n\n" +
   "Time to plan that perfect coffee date! ☕💕";
  
- try{fetch("/",{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded"},body:new URLSearchParams({"form-name":"coffee-response",name:name,date:day,time:time,coffee:coffee,answers:answers.join(" | "),email:"ayush18599@gmail.com"}).toString()}).catch(function(){})}catch(e){}
- try{fetch("https://ntfy.sh/"+NTFY,{method:"POST",body:detailedMsg,headers:{"Title":"☕ Coffee Date Response from "+name,"Tags":"coffee,heart,date","Email":"ayush18599@gmail.com"}}).catch(function(){})}catch(e){}
+ try{fetch("https://ntfy.sh/coffee-simran-ayush2024",{method:"POST",body:detailedMsg,headers:{"Title":"☕ "+name+" said YES to coffee!","Tags":"coffee,heart,date","Email":"ayush18599@gmail.com"}}).catch(function(){})}catch(e){}
 }
 
 function lock(){
@@ -234,11 +281,9 @@ document.addEventListener("pointermove",function(e){
 
 // Spotify Integration
 var tracks=[
- {l:"Now playing",t:"Perfect",a:"Ed Sheeran",id:"0tgVpDi06FyKpA1z0VMD4v"},
- {l:"Now playing",t:"Coffee for Your Head",a:"Powfu ft. beabadoobee",id:"7lPN2DXiMsVn7XUKtOW1CS"},
- {l:"Now playing",t:"Make You Feel My Love",a:"Adele",id:"0put0U4CtSA7Qp4aNZUq6L"},
- {l:"Now playing",t:"Stay With Me",a:"Sam Smith",id:"52xaypL0Tmzls4lTcFqnHF"},
- {l:"Closing track",t:"All of Me",a:"John Legend",id:"3U4isOIWM3VvDubwSI3y7a"}
+ {l:"Now playing",t:"Summertime in Paris",a:"Jaden",id:"6XNANAB7sFvkfho6bMCp7o"},
+ {l:"Now playing",t:"Espresso",a:"Sabrina Carpenter",id:"2qSkIjg1o9h3YT9RAgYN75"},
+ {l:"Now playing",t:"Adore You",a:"Harry Styles",id:"3jjujdWJ72nww5eGnfs2E7"}
 ],curTr=-1,ctl=null,np=document.createElement("a"),spw=document.createElement("div");
 np.className="np";np.target="_blank";np.rel="noopener";
 spw.className="spw";spw.style.display="none";spw.innerHTML='<div id="sp"></div>';
