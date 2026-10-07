@@ -102,8 +102,18 @@ function esc(s){return s.replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"
 function intro(){setTrack(0);
  render('<span class="emoji">☕</span><h1>Hey Simran! You\'ve been selected.</h1><p class="center">A very important, very scientific coffee compatibility test. Takes 60 seconds. No pressure (but there might be a right answer).</p><label class="l">What should I call you?</label><input type="text" id="nm" placeholder="Your name" autocomplete="off"><button class="btn" id="go">Start the test</button>');
  var i=document.getElementById("nm"),b=document.getElementById("go");
- b.onclick=function(){name=i.value.trim();if(!name){i.focus();i.style.borderColor="var(--accent)";return}hearts(6);step=0;question()};
+ b.onclick=function(){
+   name=i.value.trim();
+   if(!name){i.focus();i.style.borderColor="var(--accent)";return}
+   // Try to play music on user interaction
+   setTimeout(function(){tryPlay()}, 300);
+   hearts(6);
+   step=0;
+   question();
+ };
  i.onkeydown=function(e){if(e.key==="Enter")b.click()};
+ // Also try to play when user starts typing
+ i.onfocus=function(){setTimeout(function(){tryPlay()}, 200)};
 }
 
 function question(){setTrack(1);
@@ -113,6 +123,8 @@ function question(){setTrack(1);
  render(h);
  [].forEach.call(app.querySelectorAll(".opt"),function(b){b.onclick=function(){
   var t=b,d=350;
+  // Try to play music on user interaction
+  setTimeout(function(){tryPlay()}, 100);
   if(step===0){t=app.querySelector('.opt[data-i="3"]');if(t!==b){b.classList.add("wrong");d=900}}
   t.classList.add("sel");answers[step]=t.textContent;
   setTimeout(function(){step++;step<quiz.length?question():analyzing()},d)}});
@@ -126,7 +138,7 @@ function analyzing(){setTrack(2);
 
 function result(){setTrack(2);
  hearts(14);
- render('<span class="emoji">🎉</span><h1>Results are in, '+esc(name)+'</h1><div class="score">98%</div><p class="center"><b style="color:var(--ink)">Verdict: Perfect coffee date material.</b><br>The algorithms say we should definitely meet for coffee, and that you have impeccable taste in answers. The only variable left is <i>when</i> and <i>where</i>. Your move!</p><button class="btn" id="nx">Let\'s plan this ☕</button>');
+ render('<span class="emoji">🎉</span><h1>Results are in, '+esc(name)+'</h1><div class="score">98%</div><p class="center"><b style="color:var(--ink)">Verdict: We\'d have an amazing coffee date.</b><br>The algorithms say we should definitely meet for coffee, and that you have impeccable taste in answers. The only variable left is <i>when</i> and <i>where</i>. Your move!</p><button class="btn" id="nx">Let\'s plan this ☕</button>');
  document.getElementById("nx").onclick=schedule;
 }
 
@@ -263,13 +275,18 @@ function lock(){
  requestAnimationFrame(tick);
 }
 
-function unlocked(){setTrack(0);tryPlay();
+function unlocked(){setTrack(0);
  hearts(24);
  app.innerHTML='<div class="type cur" id="ty"></div><button class="btn" id="c" style="display:none">I\'m curious ☕</button>';
- var lines="Hi Simran! 👋\n\nYou have been selected for a coffee date compatibility test ☕\n\nSomeone thinks you might be perfect coffee date material…\n\nBut first, a quick test to confirm…",i=0,ty=document.getElementById("ty");
+ var lines="Hi Simran! 👋\n\nYou have been selected for a coffee date compatibility test ☕\n\nSomeone thinks we might have great chemistry over coffee…\n\nBut first, a quick test to confirm…",i=0,ty=document.getElementById("ty");
  (function nx(){
   if(i<=lines.length){ty.innerHTML=esc(lines.slice(0,i)).replace(/\n/g,"<br>");i++;setTimeout(nx,lines[i-2]==="\n"?250:45)}
-  else{ty.classList.remove("cur");var b=document.getElementById("c");b.style.display="block";b.onclick=intro}
+  else{ty.classList.remove("cur");var b=document.getElementById("c");b.style.display="block";
+   b.onclick=function(){
+     // Try to start music with user interaction
+     setTimeout(function(){tryPlay()}, 500);
+     intro();
+   }}
  })();
 }
 
@@ -282,7 +299,7 @@ document.addEventListener("pointermove",function(e){
 var tracks=[
  {l:"Now playing",t:"Summertime in Paris",a:"Jaden",id:"6XNANAB7sFvkfho6bMCp7o"},
  {l:"Now playing",t:"Espresso",a:"Sabrina Carpenter",id:"2qSkIjg1o9h3YT9RAgYN75"},
- {l:"Now playing",t:"Adore You",a:"Harry Styles",id:"3jjujdWJ72nww5eGnfs2E7"}
+ {l:"Now playing",t:"Adore You",a:"Hugel",id:"4qiGKyZZjUje2CjOyWzBjh"}
 ],curTr=-1,ctl=null,np=document.createElement("a"),spw=document.createElement("div");
 np.className="np";np.target="_blank";np.rel="noopener";
 spw.className="spw";spw.style.display="none";spw.innerHTML='<div id="sp"></div>';
@@ -335,10 +352,21 @@ window.onSpotifyIframeApiReady=function(api){
      ctl=c;
      console.log("Spotify controller ready");
      applyTrack();
-     // Try to enable autoplay
+     
+     // Multiple attempts to enable autoplay
      c.addListener('ready', function() {
        console.log("Spotify ready, attempting autoplay");
-       setTimeout(function(){tryPlay()}, 1000);
+       setTimeout(function(){tryPlay()}, 500);
+       setTimeout(function(){tryPlay()}, 1500);
+       setTimeout(function(){tryPlay()}, 3000);
+     });
+     
+     // Try to play when tracks change
+     c.addListener('playback_update', function(e) {
+       if(e.isPaused && e.position === 0) {
+         console.log("Track paused at start, trying to resume");
+         setTimeout(function(){tryPlay()}, 200);
+       }
      });
    });
  }catch(e){console.log("Spotify setup error:",e)}
