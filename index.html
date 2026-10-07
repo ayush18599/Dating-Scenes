@@ -80,9 +80,9 @@ textarea{width:100%;min-height:130px;padding:14px;border-radius:14px;border:2px 
     <input name="name">
     <input name="date">
     <input name="time">
-    <input name="coffee">
+    <input name="coffee-preference">
     <input name="answers">
-    <input name="email">
+    <input name="contact-email">
     <textarea name="message"></textarea>
 </form>
 <script>
@@ -131,25 +131,22 @@ function result(){setTrack(2);
 }
 
 function schedule(){setTrack(2);
- var times=["Morning coffee (10-11 AM)","Afternoon break (2-3 PM)","Evening coffee (6-7 PM)"],coffees=["☕ Classic coffee","🥛 Something with oat milk","🧊 Iced coffee adventure","🎲 I trust your choice (you seem to know coffee)"];
+ var times=["Morning coffee (10-11 AM)","Afternoon break (2-3 PM)","Evening coffee (6-7 PM)"];
  var h='<h2>Perfect! Let\'s lock in the details</h2><label class="l">Which day works for you?</label><div id="cal" class="cal"></div><label class="l">What time suits you best?</label><div class="chips" id="t">';
  times.forEach(function(x){h+='<button class="chip" data-v="'+x+'">'+x+'</button>'});
- h+='</div><label class="l">Coffee preference?</label><div class="chips" id="r">';
- coffees.forEach(function(x){h+='<button class="chip" data-v="'+x+'">'+x+'</button>'});
  h+='</div><button class="btn" id="ok" disabled>It\'s a date! ☕</button>';
  render(h);
  var ok=document.getElementById("ok");
  function bind(id,set){[].forEach.call(document.querySelectorAll("#"+id+" .chip"),function(c){c.onclick=function(){
   [].forEach.call(document.querySelectorAll("#"+id+" .chip"),function(o){o.classList.remove("sel")});
-  c.classList.add("sel");set(c.dataset.v);ok.disabled=!(day&&time&&coffee)}})}
- var n=new Date();calY=n.getFullYear();calM=n.getMonth();selTs=0;day="";buildCal(function(){ok.disabled=!(day&&time&&coffee)});bind("t",function(v){time=v});bind("r",function(v){coffee=v});
+  c.classList.add("sel");set(c.dataset.v);ok.disabled=!(day&&time)}})}
+ var n=new Date();calY=n.getFullYear();calM=n.getMonth();selTs=0;day="";time="";buildCal(function(){ok.disabled=!(day&&time)});bind("t",function(v){time=v});
  ok.onclick=final;
 }
 
 function final(){setTrack(2);
  notify();hearts(22);
- var cf=coffee.indexOf("trust your choice")>-1?"🎲 Your choice (you clearly know your coffee)":coffee;
- render('<span class="emoji">✅</span><h1>Coffee date confirmed! ☕</h1><p class="center">Perfect! I\'ve noted everything down and will be in touch soon to finalize the location. Can\'t wait for some great coffee and even better conversation!</p><div style="border:2px dashed var(--line);border-radius:16px;padding:14px;text-align:center;line-height:1.9"><b>📅 '+esc(day)+'</b><br>🕐 '+esc(time)+'<br>'+esc(cf)+'</div><p class="small">Thanks for taking the test, '+esc(name)+' ☕ This is going to be fun!</p>');
+ render('<span class="emoji">✅</span><h1>Coffee date confirmed! ☕</h1><p class="center">Perfect! I\'ve noted everything down and will be in touch soon to finalize the location. Can\'t wait for some great coffee and even better conversation!</p><div style="border:2px dashed var(--line);border-radius:16px;padding:14px;text-align:center;line-height:1.9"><b>📅 '+esc(day)+'</b><br>🕐 '+esc(time)+'</div><p class="small">Thanks for taking the test, '+esc(name)+' ☕ This is going to be fun!</p>');
 }
 
 var calY,calM,selTs=0;
@@ -170,28 +167,6 @@ function buildCal(cb){
   selTs=+x.dataset.t;day=new Date(selTs).toLocaleDateString("en-GB",{weekday:"long",day:"numeric",month:"long"});buildCal(cb);cb()}});
 }
 
-function schedule(){
- var times=["Morning coffee (10-11 AM)","Afternoon break (2-3 PM)","Evening coffee (6-7 PM)"],coffees=["☕ Classic coffee","🥛 Something with oat milk","🧊 Iced coffee adventure","🎲 I trust your choice (you seem to know coffee)"];
- var h='<h2>Perfect! Let\'s lock in the details</h2><label class="l">Which day works for you?</label><div id="cal" class="cal"></div><label class="l">What time suits you best?</label><div class="chips" id="t">';
- times.forEach(function(x){h+='<button class="chip" data-v="'+x+'">'+x+'</button>'});
- h+='</div><label class="l">Coffee preference?</label><div class="chips" id="r">';
- coffees.forEach(function(x){h+='<button class="chip" data-v="'+x+'">'+x+'</button>'});
- h+='</div><button class="btn" id="ok" disabled>It\'s a date! ☕</button>';
- render(h);
- var ok=document.getElementById("ok");
- function bind(id,set){[].forEach.call(document.querySelectorAll("#"+id+" .chip"),function(c){c.onclick=function(){
-  [].forEach.call(document.querySelectorAll("#"+id+" .chip"),function(o){o.classList.remove("sel")});
-  c.classList.add("sel");set(c.dataset.v);ok.disabled=!(day&&time&&coffee)}})}
- var n=new Date();calY=n.getFullYear();calM=n.getMonth();selTs=0;day="";buildCal(function(){ok.disabled=!(day&&time&&coffee)});bind("t",function(v){time=v});bind("r",function(v){coffee=v});
- ok.onclick=final;
-}
-
-function final(){setTrack(2);
- notify();hearts(22);
- var cf=coffee.indexOf("trust your choice")>-1?"🎲 Your choice (you clearly know your coffee)":coffee;
- render('<span class="emoji">✅</span><h1>Coffee date confirmed! ☕</h1><p class="center">Perfect! I\'ve noted everything down and will be in touch soon to finalize the location. Can\'t wait for some great coffee and even better conversation!</p><div style="border:2px dashed var(--line);border-radius:16px;padding:14px;text-align:center;line-height:1.9"><b>📅 '+esc(day)+'</b><br>🕐 '+esc(time)+'<br>'+esc(cf)+'</div><p class="small">Thanks for taking the test, '+esc(name)+' ☕ This is going to be fun!</p>');
-}
-
 function hearts(n){
  var e=["💖","✨","☕","🥐","💫"];
  for(var i=0;i<n;i++)(function(i){setTimeout(function(){
@@ -204,45 +179,69 @@ var NTFY="coffee-simran-2024"; // notification topic
 var sent=false;
 function notify(){
  if(sent)return;sent=true;
- var msg="🎉 COFFEE DATE SUCCESS! 🎉 | "+name+" said YES | Date: "+day+" | Time: "+time+" | Coffee: "+coffee;
+ 
+ // Get coffee preference from quiz answers if available
+ var coffeePref = answers[0] ? answers[0] : "Not specified";
+ 
  var formData = {
    "form-name": "coffee-response",
    "name": name,
    "date": day,
    "time": time,
-   "coffee": coffee,
+   "coffee-preference": coffeePref,
    "answers": answers.join(" | "),
-   "email": "ayush18599@gmail.com",
-   "message": "Coffee Date Response from " + name + " - All details: " + JSON.stringify({name,day,time,coffee,answers})
+   "contact-email": "ayush18599@gmail.com",
+   "message": "Coffee Date Response from " + name + " - Date: " + day + " - Time: " + time + " - Quiz answers: " + answers.join(" | ")
  };
  
- // Enhanced Netlify form submission
+ // Enhanced Netlify form submission with better error handling
+ console.log("Submitting form:", formData);
  try{
    fetch("/", {
      method: "POST",
      headers: {"Content-Type": "application/x-www-form-urlencoded"},
      body: new URLSearchParams(formData).toString()
    }).then(response => {
-     console.log("Form submitted successfully:", response.status);
+     console.log("✅ Form submitted successfully:", response.status);
+     if(!response.ok) {
+       console.error("Form submission failed:", response.status, response.statusText);
+     }
    }).catch(error => {
-     console.log("Form submission error:", error);
+     console.error("❌ Form submission error:", error);
    });
- }catch(e){console.log("Form error:", e)}
+ }catch(e){console.error("❌ Form error:", e)}
  
- // Backup ntfy notification
+ // Backup ntfy notification with detailed info
  var detailedMsg="🎉 COFFEE DATE SUCCESS! 🎉\n\n" +
   "Name: "+name+"\n" +
   "Selected Date: "+day+"\n" + 
   "Preferred Time: "+time+"\n" +
-  "Coffee Choice: "+coffee+"\n\n" +
+  "Coffee Preference: "+coffeePref+"\n\n" +
   "Quiz Answers:\n" +
-  "Q1: "+answers[0]+"\n" +
-  "Q2: "+answers[1]+"\n" +
-  "Q3: "+answers[2]+"\n" +
-  "Q4: "+answers[3]+"\n\n" +
-  "Time to plan that perfect coffee date! ☕💕";
+  "Q1 (Coffee vibe): "+answers[0]+"\n" +
+  "Q2 (Perfect date): "+answers[1]+"\n" +
+  "Q3 (Ordering style): "+answers[2]+"\n" +
+  "Q4 (What's next): "+answers[3]+"\n\n" +
+  "🎵 Songs played: Summertime in Paris, Espresso, Adore You\n\n" +
+  "Time to plan that perfect coffee date! ☕💕\n\n" +
+  "Response submitted at: " + new Date().toLocaleString();
  
- try{fetch("https://ntfy.sh/coffee-simran-ayush2024",{method:"POST",body:detailedMsg,headers:{"Title":"☕ "+name+" said YES to coffee!","Tags":"coffee,heart,date","Email":"ayush18599@gmail.com"}}).catch(function(){})}catch(e){}
+ try{
+   fetch("https://ntfy.sh/coffee-simran-ayush2024",{
+     method:"POST",
+     body:detailedMsg,
+     headers:{
+       "Title":"☕ "+name+" said YES to coffee!",
+       "Tags":"coffee,heart,date,simran",
+       "Priority":"high",
+       "Email":"ayush18599@gmail.com"
+     }
+   }).then(response => {
+     console.log("✅ Notification sent:", response.status);
+   }).catch(error => {
+     console.error("❌ Notification error:", error);
+   });
+ }catch(e){console.error("❌ Notification error:", e)}
 }
 
 function lock(){
@@ -294,7 +293,15 @@ function applyTrack(){
  var k=tracks[curTr];if(!k)return;
  var on=!!(ctl&&k.id);
  spw.style.display=on?"block":"none";np.style.display=on?"none":"flex";
- if(on){try{ctl.loadUri("spotify:track:"+k.id)}catch(e){}}
+ if(on){
+   try{
+     ctl.loadUri("spotify:track:"+k.id);
+     // Try to autoplay after a small delay
+     setTimeout(function(){
+       try{ctl.play()}catch(e){console.log("Autoplay failed:",e)}
+     }, 500);
+   }catch(e){console.log("Load track error:",e)}
+ }
  np.href="https://open.spotify.com/search/"+encodeURIComponent(k.t+" "+k.a);
  np.innerHTML='<span class="eq"><i></i><i></i><i></i></span><span>'+k.l+' · '+k.t+' — '+k.a+' ↗</span>';
  np.style.opacity=1;
@@ -303,9 +310,38 @@ function setTrack(i){
  if(i===curTr)return;curTr=i;np.style.opacity=0;
  setTimeout(applyTrack,250);
 }
-function tryPlay(){if(ctl)try{ctl.play()}catch(e){}}
+function tryPlay(){
+ if(ctl){
+   try{
+     ctl.play();
+     console.log("Music started successfully");
+   }catch(e){
+     console.log("Play failed:",e);
+     // Fallback: try again after user interaction
+     setTimeout(function(){
+       try{ctl.play()}catch(e2){console.log("Retry failed:",e2)}
+     }, 1000);
+   }
+ }
+}
 window.onSpotifyIframeApiReady=function(api){
- try{api.createController(document.getElementById("sp"),{uri:"spotify:track:"+tracks[0].id,width:"100%",height:80},function(c){ctl=c;applyTrack()})}catch(e){}
+ try{
+   api.createController(document.getElementById("sp"),{
+     uri:"spotify:track:"+tracks[0].id,
+     width:"100%",
+     height:80,
+     theme:"0" // Dark theme looks better
+   },function(c){
+     ctl=c;
+     console.log("Spotify controller ready");
+     applyTrack();
+     // Try to enable autoplay
+     c.addListener('ready', function() {
+       console.log("Spotify ready, attempting autoplay");
+       setTimeout(function(){tryPlay()}, 1000);
+     });
+   });
+ }catch(e){console.log("Spotify setup error:",e)}
 };
 (function(){var j=document.createElement("script");j.src="https://open.spotify.com/embed/iframe-api/v1";j.async=true;j.onerror=function(){};document.body.appendChild(j)})();
 
