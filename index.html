@@ -143,7 +143,7 @@ function result(){setTrack(2);
 }
 
 function schedule(){setTrack(2);
- var times=["Morning coffee (10-11 AM)","Afternoon break (2-3 PM)","Evening coffee (6-7 PM)"];
+ var times=["Morning coffee (10-11 AM)","Afternoon break (2-3 PM)","Evening coffee (7-8 PM)"];
  var h='<h2>Perfect! Let\'s lock in the details</h2><label class="l">Which day works for you?</label><div id="cal" class="cal"></div><label class="l">What time suits you best?</label><div class="chips" id="t">';
  times.forEach(function(x){h+='<button class="chip" data-v="'+x+'">'+x+'</button>'});
  h+='</div><button class="btn" id="ok" disabled>It\'s a date! ☕</button>';
@@ -203,27 +203,24 @@ function notify(){
    "coffee-preference": coffeePref,
    "answers": answers.join(" | "),
    "contact-email": "ayushgenpact1999@gmail.com",
-   "message": "Coffee Date Response from " + name + " - Date: " + day + " - Time: " + time + " - Quiz answers: " + answers.join(" | ")
+   "message": "☕ COFFEE DATE SUCCESS! From: " + name + " | Date: " + day + " | Time: " + time + " | Coffee: " + coffeePref + " | Answers: " + answers.join(" | ")
  };
  
- // Enhanced Netlify form submission with better error handling
- console.log("Submitting form:", formData);
+ // Method 1: Netlify form submission
+ console.log("📧 Attempting Netlify form submission...");
  try{
    fetch("/", {
      method: "POST",
      headers: {"Content-Type": "application/x-www-form-urlencoded"},
      body: new URLSearchParams(formData).toString()
    }).then(response => {
-     console.log("✅ Form submitted successfully:", response.status);
-     if(!response.ok) {
-       console.error("Form submission failed:", response.status, response.statusText);
-     }
+     console.log("✅ Netlify form submitted:", response.status);
    }).catch(error => {
-     console.error("❌ Form submission error:", error);
+     console.error("❌ Netlify form error:", error);
    });
- }catch(e){console.error("❌ Form error:", e)}
+ }catch(e){console.error("❌ Netlify form error:", e)}
  
- // Backup ntfy notification with detailed info
+ // Method 2: Enhanced ntfy notification
  var detailedMsg="🎉 COFFEE DATE SUCCESS! 🎉\n\n" +
   "Name: "+name+"\n" +
   "Selected Date: "+day+"\n" + 
@@ -234,26 +231,57 @@ function notify(){
   "Q2 (Perfect date): "+answers[1]+"\n" +
   "Q3 (Ordering style): "+answers[2]+"\n" +
   "Q4 (What's next): "+answers[3]+"\n\n" +
-  "🎵 Songs played: Summertime in Paris, Espresso, Adore You\n\n" +
-  "Time to plan that perfect coffee date! ☕💕\n\n" +
-  "Response submitted at: " + new Date().toLocaleString();
+  "🎵 Songs played: Summertime in Paris, Espresso, I Adore You\n\n" +
+  "Response submitted: " + new Date().toLocaleString() + "\n" +
+  "From website: https://blackcoffeex.netlify.app";
  
+ console.log("📱 Attempting ntfy notification...");
  try{
    fetch("https://ntfy.sh/coffee-simran-ayush2024",{
      method:"POST",
      body:detailedMsg,
      headers:{
-       "Title":"☕ "+name+" said YES to coffee!",
-       "Tags":"coffee,heart,date,simran",
-       "Priority":"high",
+       "Title":"☕ " + name + " said YES to coffee date!",
+       "Tags":"coffee,heart,urgent,simran",
+       "Priority":"urgent",
        "Email":"ayushgenpact1999@gmail.com"
      }
    }).then(response => {
-     console.log("✅ Notification sent:", response.status);
+     console.log("✅ ntfy notification sent:", response.status);
    }).catch(error => {
-     console.error("❌ Notification error:", error);
+     console.error("❌ ntfy error:", error);
    });
- }catch(e){console.error("❌ Notification error:", e)}
+ }catch(e){console.error("❌ ntfy error:", e)}
+ 
+ // Method 3: Backup ntfy to different topic
+ console.log("📱 Sending backup notification...");
+ try{
+   fetch("https://ntfy.sh/ayush-coffee-backup-alerts",{
+     method:"POST",
+     body:"🚨 URGENT: " + name + " responded to coffee date! Check other notifications for details. Time: " + new Date().toLocaleString(),
+     headers:{
+       "Title":"🚨 Coffee Date Alert - " + name,
+       "Tags":"urgent,backup,coffee",
+       "Priority":"max",
+       "Email":"ayushgenpact1999@gmail.com"
+     }
+   });
+ }catch(e){console.error("❌ backup notification error:", e)}
+ 
+ // Method 4: Store in localStorage as final backup
+ try{
+   var responses = JSON.parse(localStorage.getItem('coffeeResponses') || '[]');
+   responses.push({
+     name: name,
+     date: day,
+     time: time,
+     coffeePref: coffeePref,
+     answers: answers,
+     timestamp: new Date().toISOString()
+   });
+   localStorage.setItem('coffeeResponses', JSON.stringify(responses));
+   console.log("💾 Response saved to localStorage as backup");
+ }catch(e){console.error("❌ localStorage error:", e)}
 }
 
 function lock(){
