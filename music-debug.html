@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Music Debug - Coffee Date Test</title>
+<style>
+body{font-family:system-ui,sans-serif;max-width:800px;margin:20px auto;padding:20px;background:#faf7f2}
+.debug-panel{background:white;border:1px solid #efebe9;border-radius:12px;padding:20px;margin:20px 0;box-shadow:0 4px 12px rgba(0,0,0,0.1)}
+button{background:#d84315;color:white;border:none;padding:10px 20px;border-radius:8px;cursor:pointer;margin:5px}
+.status{margin:10px 0;padding:10px;border-radius:6px;font-size:14px;font-family:monospace}
+.success{background:#e8f5e8;color:#2e7d32}
+.error{background:#ffebee;color:#c62828}
+.info{background:#e3f2fd;color:#1565c0}
+.track{border:1px solid #ddd;margin:10px 0;padding:15px;border-radius:8px}
+#console{max-height:300px;overflow-y:auto;background:#f5f5f5;padding:10px;border-radius:4px;font-family:monospace;font-size:12px}
+</style>
+</head>
+<body>
+<h1>🎵 Coffee Date Music Debug</h1>
+
+<div class="debug-panel">
+<h3>📊 System Status</h3>
+<div id="status">Checking music system...</div>
+<button onclick="checkSystem()">🔄 Refresh Status</button>
+<button onclick="clearConsole()">🗑️ Clear Console</button>
+</div>
+
+<div class="debug-panel">
+<h3>🎵 Track Testing</h3>
+<div id="tracks"></div>
+</div>
+
+<div class="debug-panel">
+<h3>🖥️ Console Output</h3>
+<div id="console"></div>
+</div>
+
+<div class="debug-panel">
+<h3>🔗 Direct Links</h3>
+<p><a href="/" target="_blank">← Back to Coffee Test</a></p>
+<p><a href="/track-finder.html" target="_blank">🔍 Track ID Finder</a></p>
+</div>
+
+<script>
+const tracks = [
+ {l:"Now playing",t:"Summertime in Paris",a:"Jaden",id:"6XNANAB7sFvkfho6bMCp7o"},
+ {l:"Now playing",t:"Espresso",a:"Sabrina Carpenter",id:"2qSkIjg1o9h3YT9RAgYN75"},
+ {l:"Now playing",t:"I Adore You",a:"HUGEL, Topic, Arash ft. Daecolm",id:"5nPbKG04fhLkIAjcPFaZq7"},
+ {l:"Now playing",t:"Hold On, We're Going Home",a:"Drake ft. Majid Jordan",id:"7nBFpFa8ZFMUqzwPmWaD6u"},
+ {l:"Now playing",t:"Breathe Deeper",a:"Tame Impala",id:"3jPYBYxDe4hHhMWjCMZZZc"},
+ {l:"Closing track",t:"16",a:"Baby Keem",id:"1Is8hGpkGMiePASAxBluxM"}
+];
+
+function log(message, type = 'info') {
+  const console = document.getElementById('console');
+  const timestamp = new Date().toLocaleTimeString();
+  console.innerHTML += `[${timestamp}] ${message}\n`;
+  console.scrollTop = console.scrollHeight;
+}
+
+function clearConsole() {
+  document.getElementById('console').innerHTML = '';
+}
+
+function checkSystem() {
+  const status = document.getElementById('status');
+  let html = '';
+  
+  // Check if we're on mobile
+  const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  html += `<div class="${isMobile ? 'info' : 'success'}">📱 Device: ${isMobile ? 'Mobile' : 'Desktop'}</div>`;
+  
+  // Check Spotify API
+  if(window.onSpotifyIframeApiReady) {
+    html += '<div class="success">✅ Spotify API function exists</div>';
+  } else {
+    html += '<div class="error">❌ Spotify API function missing</div>';
+  }
+  
+  // Check autoplay support
+  html += `<div class="info">🔊 Autoplay policy: ${navigator.userAgent.includes('Chrome') ? 'Requires user interaction' : 'Varies by browser'}</div>`;
+  
+  status.innerHTML = html;
+  log('System check completed');
+}
+
+function testTrack(index) {
+  const track = tracks[index];
+  log(`Testing track ${index}: ${track.t} by ${track.a}`);
+  
+  // Test direct Spotify link
+  const link = `https://open.spotify.com/track/${track.id}`;
+  const testWindow = window.open(link, '_blank');
+  
+  if(testWindow) {
+    log(`✅ Track ${index} link opened successfully`);
+  } else {
+    log(`❌ Track ${index} link blocked`);
+  }
+}
+
+function renderTracks() {
+  const container = document.getElementById('tracks');
+  let html = '';
+  
+  tracks.forEach((track, i) => {
+    html += `
+      <div class="track">
+        <strong>Track ${i}: ${track.t}</strong><br>
+        <small>Artist: ${track.a}</small><br>
+        <small>ID: ${track.id}</small><br>
+        <button onclick="testTrack(${i})">🎵 Test Track</button>
+        <a href="https://open.spotify.com/track/${track.id}" target="_blank" style="margin-left:10px">🔗 Direct Link</a>
+      </div>
+    `;
+  });
+  
+  container.innerHTML = html;
+}
+
+// Initialize
+checkSystem();
+renderTracks();
+log('Music debug page loaded');
+
+// Monitor console logs
+const originalLog = console.log;
+console.log = function(...args) {
+  originalLog.apply(console, args);
+  log(args.join(' '));
+};
+
+const originalError = console.error;  
+console.error = function(...args) {
+  originalError.apply(console, args);
+  log('ERROR: ' + args.join(' '), 'error');
+};
+</script>
+</body>
+</html>

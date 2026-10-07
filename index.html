@@ -419,29 +419,43 @@ function unlocked(){
  setTrack(0);
  hearts(24);
  
+ // Test Spotify availability
+ setTimeout(function(){
+   if(!ctl || !spotifyReady) {
+     console.log("⚠️ Spotify not available, music will use fallback links");
+   }
+ }, 3000);
+ 
  // VERY aggressive autoplay attempts
  var playAttempts = 0;
- var maxAttempts = 10;
+ var maxAttempts = 15;
  
  function attemptPlay() {
-   if(playAttempts < maxAttempts && ctl) {
-     try {
-       console.log("🎵 Autoplay attempt " + (playAttempts + 1));
-       ctl.play();
-       playAttempts++;
-       if(playAttempts < maxAttempts) {
-         setTimeout(attemptPlay, 200 * playAttempts);
+   if(playAttempts < maxAttempts) {
+     playAttempts++;
+     console.log("🎵 Autoplay attempt " + playAttempts);
+     
+     if(ctl && spotifyReady) {
+       try {
+         ctl.play();
+         console.log("✅ Spotify autoplay successful");
+       } catch(e) {
+         console.log("❌ Spotify autoplay failed:", e);
+         if(playAttempts < maxAttempts) {
+           setTimeout(attemptPlay, 800 * playAttempts);
+         }
        }
-     } catch(e) {
-       console.log("❌ Autoplay attempt " + (playAttempts + 1) + " failed:", e);
-       playAttempts++;
-       setTimeout(attemptPlay, 500 * playAttempts);
+     } else {
+       console.log("⚠️ Spotify not ready, trying again...");
+       if(playAttempts < maxAttempts) {
+         setTimeout(attemptPlay, 1000 * playAttempts);
+       }
      }
    }
  }
  
- // Start aggressive autoplay attempts
- setTimeout(attemptPlay, 100);
+ // Start autoplay attempts
+ setTimeout(attemptPlay, 500);
  
  app.innerHTML='<div class="type cur" id="ty"></div><button class="btn" id="c" style="display:none">I\'m curious ☕</button>';
  var lines="Hi Simran! 👋\n\nYou have been selected for a coffee date compatibility test ☕\n\nSomeone thinks we might have great chemistry over coffee…\n\nBut first, a quick test to confirm…",i=0,ty=document.getElementById("ty");
@@ -450,7 +464,7 @@ function unlocked(){
    ty.innerHTML=esc(lines.slice(0,i)).replace(/\n/g,"<br>");
    i++;
    // Try to play during typing animation
-   if(i % 10 === 0) attemptPlay();
+   if(i % 15 === 0) attemptPlay();
    setTimeout(nx,lines[i-2]==="\n"?250:45);
   } else {
    ty.classList.remove("cur");
@@ -458,7 +472,7 @@ function unlocked(){
    b.style.display="block";
    b.onclick=function(){
      // Final attempt with user interaction
-     setTimeout(function(){attemptPlay();tryPlay()}, 100);
+     setTimeout(function(){attemptPlay();tryPlay()}, 200);
      intro();
    }
   }
@@ -470,97 +484,171 @@ document.addEventListener("pointermove",function(e){
  var d=document.createElement("span");d.className="spark";d.style.left=e.clientX+"px";d.style.top=e.clientY+"px";
  document.body.appendChild(d);setTimeout(function(){d.remove()},800)});
 
-// Spotify Integration
+// Spotify Integration with verified track IDs
 var tracks=[
  {l:"Now playing",t:"Summertime in Paris",a:"Jaden",id:"6XNANAB7sFvkfho6bMCp7o"},
  {l:"Now playing",t:"Espresso",a:"Sabrina Carpenter",id:"2qSkIjg1o9h3YT9RAgYN75"},
  {l:"Now playing",t:"I Adore You",a:"HUGEL, Topic, Arash ft. Daecolm",id:"5nPbKG04fhLkIAjcPFaZq7"},
  {l:"Now playing",t:"Hold On, We're Going Home",a:"Drake ft. Majid Jordan",id:"7nBFpFa8ZFMUqzwPmWaD6u"},
  {l:"Now playing",t:"Breathe Deeper",a:"Tame Impala",id:"3jPYBYxDe4hHhMWjCMZZZc"},
- {l:"Closing track",t:"16",a:"Baby Keem",id:"4EVpmkEwrLYEcwArIlWnHB"}
+ {l:"Closing track",t:"16",a:"Baby Keem",id:"1Is8hGpkGMiePASAxBluxM"}
 ],curTr=-1,ctl=null,np=document.createElement("a"),spw=document.createElement("div");
+
 np.className="np";np.target="_blank";np.rel="noopener";
 spw.className="spw";spw.style.display="none";spw.innerHTML='<div id="sp"></div>';
 document.querySelector(".wrap").appendChild(spw);
 document.querySelector(".wrap").appendChild(np);
 
+var spotifyReady = false;
+
 function applyTrack(){
- var k=tracks[curTr];if(!k)return;
- var on=!!(ctl&&k.id);
- spw.style.display=on?"block":"none";np.style.display=on?"none":"flex";
+ var k=tracks[curTr];
+ if(!k) {
+   console.log("❌ No track found for index", curTr);
+   return;
+ }
+ 
+ console.log("🎵 Applying track:", k.t, "by", k.a, "ID:", k.id);
+ 
+ var on=!!(ctl&&k.id&&spotifyReady);
+ spw.style.display=on?"block":"none";
+ np.style.display=on?"none":"flex";
+ 
  if(on){
    try{
+     console.log("🎵 Loading Spotify track:", k.id);
      ctl.loadUri("spotify:track:"+k.id);
-     // Try to autoplay after a small delay
+     
+     // Multiple autoplay attempts with different strategies
      setTimeout(function(){
-       try{ctl.play()}catch(e){console.log("Autoplay failed:",e)}
-     }, 500);
-   }catch(e){console.log("Load track error:",e)}
+       try{
+         ctl.play();
+         console.log("✅ Autoplay attempt 1 successful");
+       }catch(e){
+         console.log("❌ Autoplay attempt 1 failed:", e);
+         // Try again with longer delay
+         setTimeout(function(){
+           try{
+             ctl.play();
+             console.log("✅ Autoplay attempt 2 successful");
+           }catch(e2){
+             console.log("❌ Autoplay attempt 2 failed:", e2);
+           }
+         }, 1000);
+       }
+     }, 800);
+   }catch(e){
+     console.log("❌ Load track error:",e);
+   }
  }
- np.href="https://open.spotify.com/search/"+encodeURIComponent(k.t+" "+k.a);
+ 
+ // Always show the fallback link
+ np.href="https://open.spotify.com/track/"+k.id;
  np.innerHTML='<span class="eq"><i></i><i></i><i></i></span><span>'+k.l+' · '+k.t+' — '+k.a+' ↗</span>';
  np.style.opacity=1;
 }
+
 function setTrack(i){
- if(i===curTr){
-   console.log("🎵 Track " + i + " already playing, trying to resume");
-   setTimeout(function(){tryPlay()}, 100);
+ if(i < 0 || i >= tracks.length) {
+   console.log("❌ Invalid track index:", i);
    return;
  }
- console.log("🎵 Changing from track " + curTr + " to track " + i);
+ 
+ if(i===curTr){
+   console.log("🎵 Track " + i + " already playing, trying to resume");
+   setTimeout(function(){tryPlay()}, 200);
+   return;
+ }
+ 
+ console.log("🎵 Changing from track " + curTr + " to track " + i + " (" + tracks[i].t + ")");
  curTr=i;
  np.style.opacity=0;
+ 
  setTimeout(function(){
    applyTrack();
-   // Try to play new track after it loads
-   setTimeout(function(){tryPlay()}, 300);
- }, 250);
+   setTimeout(function(){tryPlay()}, 500);
+ }, 300);
 }
+
 function tryPlay(){
- if(ctl){
-   try{
-     ctl.play();
-     console.log("Music started successfully");
-   }catch(e){
-     console.log("Play failed:",e);
-     // Fallback: try again after user interaction
-     setTimeout(function(){
-       try{ctl.play()}catch(e2){console.log("Retry failed:",e2)}
-     }, 1000);
-   }
+ if(!ctl) {
+   console.log("❌ Spotify controller not ready");
+   return;
+ }
+ 
+ if(!spotifyReady) {
+   console.log("❌ Spotify API not ready");
+   return;
+ }
+ 
+ try{
+   ctl.play();
+   console.log("✅ Music play attempt successful");
+ }catch(e){
+   console.log("❌ Play failed:",e);
+   // Retry with delay
+   setTimeout(function(){
+     try{
+       ctl.play();
+       console.log("✅ Music play retry successful");
+     }catch(e2){
+       console.log("❌ Play retry failed:",e2);
+     }
+   }, 1500);
  }
 }
+
+// Enhanced Spotify API initialization
 window.onSpotifyIframeApiReady=function(api){
+ console.log("🎵 Spotify API Ready");
  try{
    api.createController(document.getElementById("sp"),{
      uri:"spotify:track:"+tracks[0].id,
      width:"100%",
      height:80,
-     theme:"0" // Dark theme looks better
+     theme:"0"
    },function(c){
      ctl=c;
-     console.log("Spotify controller ready");
-     applyTrack();
+     spotifyReady=true;
+     console.log("✅ Spotify controller created successfully");
      
-     // Multiple attempts to enable autoplay
      c.addListener('ready', function() {
-       console.log("Spotify ready, attempting autoplay");
-       setTimeout(function(){tryPlay()}, 500);
-       setTimeout(function(){tryPlay()}, 1500);
-       setTimeout(function(){tryPlay()}, 3000);
+       console.log("✅ Spotify player ready");
+       applyTrack();
+       
+       // Try initial play after everything is ready
+       setTimeout(function(){
+         tryPlay();
+       }, 1000);
      });
      
-     // Try to play when tracks change
      c.addListener('playback_update', function(e) {
-       if(e.isPaused && e.position === 0) {
-         console.log("Track paused at start, trying to resume");
-         setTimeout(function(){tryPlay()}, 200);
+       console.log("🎵 Playback update:", e);
+       if(e.isPaused) {
+         console.log("⏸️ Music paused, trying to resume");
+         setTimeout(function(){tryPlay()}, 500);
        }
      });
+     
+     // Initial setup
+     applyTrack();
    });
- }catch(e){console.log("Spotify setup error:",e)}
+ }catch(e){
+   console.log("❌ Spotify controller creation failed:",e);
+   spotifyReady=false;
+ }
 };
-(function(){var j=document.createElement("script");j.src="https://open.spotify.com/embed/iframe-api/v1";j.async=true;j.onerror=function(){};document.body.appendChild(j)})();
+
+// Load Spotify API
+(function(){
+ console.log("🎵 Loading Spotify API...");
+ var j=document.createElement("script");
+ j.src="https://open.spotify.com/embed/iframe-api/v1";
+ j.async=true;
+ j.onload=function(){console.log("✅ Spotify API script loaded")};
+ j.onerror=function(){console.log("❌ Spotify API script failed to load")};
+ document.body.appendChild(j);
+})();
 
 lock();
 </script>
