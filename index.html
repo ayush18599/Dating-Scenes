@@ -120,7 +120,11 @@ function intro(){setTrack(0);
  i.onfocus=function(){setTimeout(function(){tryPlay()}, 200)};
 }
 
-function question(){setTrack(1);
+function question(){
+ // Set track based on current question step
+ var questionTrack = step + 1; // Questions use tracks 1-4
+ setTrack(questionTrack);
+ 
  var q=quiz[step],pct=Math.round(step/quiz.length*100);
  var h='<div class="bar"><i style="width:'+pct+'%"></i></div><p style="margin-bottom:4px">Question '+(step+1)+' of '+quiz.length+'</p><h2>'+q.q+'</h2>';
  q.o.forEach(function(t,i){h+='<button class="opt" data-i="'+i+'">'+t+'</button>'});
@@ -131,24 +135,30 @@ function question(){setTrack(1);
   setTimeout(function(){tryPlay()}, 100);
   if(step===0){t=app.querySelector('.opt[data-i="3"]');if(t!==b){b.classList.add("wrong");d=900}}
   t.classList.add("sel");answers[step]=t.textContent;
-  // Progress through different tracks for each question
-  var nextTrack = step < 2 ? 1 : (step === 2 ? 2 : 3);
-  setTimeout(function(){step++;if(step<quiz.length){setTrack(nextTrack);question()}else{analyzing()}},d)}});
+  setTimeout(function(){
+   step++;
+   if(step<quiz.length){
+    question(); // Next question (will set new track)
+   } else {
+    analyzing(); // Move to analysis
+   }
+  },d);
+ }});
 }
 
-function analyzing(){setTrack(3);
+function analyzing(){setTrack(4); // Use closing track for analysis
  render('<span class="emoji">🧪</span><h1>Analyzing your coffee preferences…</h1><p class="center" id="msg">Consulting the baristas</p><div class="bar"><i id="pb" style="width:0%"></i></div>');
  var lines=["Consulting the baristas","Checking caffeine compatibility","Calculating conversation potential","Cross-referencing pastry preferences"],n=0;
  var t=setInterval(function(){n++;document.getElementById("pb").style.width=(n*25)+"%";if(n<4)document.getElementById("msg").textContent=lines[n];if(n>=4){clearInterval(t);result()}},650);
 }
 
-function result(){setTrack(4);
+function result(){setTrack(4); // Keep closing track for results
  hearts(14);
  render('<span class="emoji">🎉</span><h1>Results are in, '+esc(name)+'</h1><div class="score">98%</div><p class="center"><b style="color:var(--ink)">Verdict: We\'d have an amazing coffee date.</b><br>The algorithms say we should definitely meet for coffee, and that you have impeccable taste in answers. The only variable left is <i>when</i> and <i>where</i>. Your move!</p><button class="btn" id="nx">Let\'s plan this ☕</button>');
  document.getElementById("nx").onclick=schedule;
 }
 
-function schedule(){setTrack(4);
+function schedule(){setTrack(4); // Keep closing track for scheduling
  var times=["Morning coffee (10-11 AM)","Afternoon break (2-3 PM)","Evening coffee (7-8 PM)"];
  var h='<h2>Perfect! Let\'s lock in the details</h2><label class="l">Which day works for you?</label><div id="cal" class="cal"></div><label class="l">What time suits you best?</label><div class="chips" id="t">';
  times.forEach(function(x){h+='<button class="chip" data-v="'+x+'">'+x+'</button>'});
@@ -162,7 +172,7 @@ function schedule(){setTrack(4);
  ok.onclick=final;
 }
 
-function final(){setTrack(4);
+function final(){setTrack(4); // Keep closing track for final confirmation
  notify();hearts(22);
  render('<span class="emoji">✅</span><h1>Coffee date confirmed! ☕</h1><p class="center">Perfect! I\'ve noted everything down and will be in touch soon to finalize the location. Can\'t wait for some great coffee and even better conversation!</p><div style="border:2px dashed var(--line);border-radius:16px;padding:14px;text-align:center;line-height:1.9"><b>📅 '+esc(day)+'</b><br>🕐 '+esc(time)+'</div><div id="submit-status" style="margin-top:15px;padding:10px;border-radius:8px;background:#e8f5e8;border:1px solid #4caf50;color:#2e7d32;font-size:14px;text-align:center">📤 Response submitted successfully! You should hear back soon.</div><p class="small">Thanks for taking the test, '+esc(name)+' ☕ This is going to be fun!</p>');
 }
