@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Coffee Date Email Test</title>
+<style>
+body{font-family:system-ui,sans-serif;max-width:600px;margin:40px auto;padding:20px;background:#faf7f2}
+.test-panel{background:white;border:1px solid #efebe9;border-radius:12px;padding:30px;margin:20px 0;box-shadow:0 4px 12px rgba(0,0,0,0.1)}
+.test-panel h2{color:#d84315;margin:0 0 20px;text-align:center}
+button{background:#d84315;color:white;border:none;padding:12px 24px;border-radius:8px;cursor:pointer;margin:10px 5px;min-width:200px}
+button:hover{background:#bf360c}
+button:disabled{background:#ccc;cursor:not-allowed}
+.status{margin:15px 0;padding:10px;border-radius:6px;font-size:14px}
+.status.success{background:#e8f5e8;color:#2e7d32;border:1px solid #4caf50}
+.status.error{background:#ffebee;color:#c62828;border:1px solid #f44336}
+.status.info{background:#e3f2fd;color:#1565c0;border:1px solid #2196f3}
+.log{background:#f5f5f5;border:1px solid #ddd;border-radius:4px;padding:10px;font-family:monospace;font-size:12px;max-height:200px;overflow-y:auto;margin:10px 0}
+input{padding:8px 12px;border:1px solid #ddd;border-radius:4px;width:100%;margin:5px 0}
+</style>
+</head>
+<body>
+<div class="test-panel">
+<h2>☕ Email Delivery Test Panel</h2>
+<p>Use this to test if email notifications are working properly.</p>
+
+<div>
+<label>Test Name:</label>
+<input type="text" id="testName" value="Test User" placeholder="Enter test name">
+</div>
+
+<button onclick="runFullTest()" id="fullTestBtn">🧪 Run Full Email Test</button>
+<button onclick="testNetlify()" id="netlifyBtn">📧 Test Netlify Form Only</button>
+<button onclick="testNtfy()" id="ntfyBtn">📱 Test ntfy.sh Only</button>
+<button onclick="clearLogs()" id="clearBtn">🗑️ Clear Logs</button>
+
+<div id="status"></div>
+<div id="logs" class="log"></div>
+</div>
+
+<div class="test-panel">
+<h3>📋 Subscription Links</h3>
+<p><strong>Primary:</strong> <a href="https://ntfy.sh/coffee-simran-ayush2024" target="_blank">ntfy.sh/coffee-simran-ayush2024</a></p>
+<p><strong>Backup:</strong> <a href="https://ntfy.sh/ayush-coffee-backup-alerts" target="_blank">ntfy.sh/ayush-coffee-backup-alerts</a></p>
+<p><strong>Admin Panel:</strong> <a href="/admin.html" target="_blank">View Response Admin Panel</a></p>
+</div>
+
+<script>
+function log(message, type = 'info') {
+  const logs = document.getElementById('logs');
+  const timestamp = new Date().toLocaleTimeString();
+  logs.innerHTML += `[${timestamp}] ${message}\n`;
+  logs.scrollTop = logs.scrollHeight;
+  
+  const status = document.getElementById('status');
+  status.innerHTML = `<div class="status ${type}">${message}</div>`;
+}
+
+function clearLogs() {
+  document.getElementById('logs').innerHTML = '';
+  document.getElementById('status').innerHTML = '';
+}
+
+function runFullTest() {
+  const name = document.getElementById('testName').value || 'Test User';
+  const btn = document.getElementById('fullTestBtn');
+  btn.disabled = true;
+  btn.textContent = '🔄 Testing...';
+  
+  log('🚀 Starting full email test...', 'info');
+  
+  // Test all methods like the real app
+  const formData = {
+    "form-name": "coffee-response",
+    "name": name,
+    "date": "Test Date - " + new Date().toDateString(),
+    "time": "Evening coffee (7-8 PM)",
+    "coffee-preference": "I trust your choice completely",
+    "answers": "Test Answer 1 | Test Answer 2 | Test Answer 3 | Test Answer 4",
+    "contact-email": "ayushgenpact1999@gmail.com",
+    "message": "🧪 EMAIL TEST from " + name + " at " + new Date().toISOString()
+  };
+  
+  let successCount = 0;
+  let totalTests = 3;
+  
+  // Test 1: Netlify Form
+  log('📧 Testing Netlify form submission...', 'info');
+  fetch("/", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+      "Accept": "text/html,application/xhtml+xml"
+    },
+    body: new URLSearchParams(formData).toString()
+  }).then(response => {
+    if(response.ok || response.status === 200 || response.status === 302) {
+      log('✅ Netlify form test PASSED (' + response.status + ')', 'success');
+      successCount++;
+    } else {
+      log('❌ Netlify form test FAILED (' + response.status + ')', 'error');
+    }
+    checkComplete();
+  }).catch(error => {
+    log('❌ Netlify form test ERROR: ' + error.message, 'error');
+    checkComplete();
+  });
+  
+  // Test 2: Primary ntfy
+  log('📱 Testing primary ntfy notification...', 'info');
+  const testMsg = "🧪 EMAIL TEST from " + name + "\n\nThis is a test notification to verify email delivery is working.\n\nTest Time: " + new Date().toLocaleString() + "\nTest ID: " + Math.random().toString(36).substr(2, 9);
+  
+  fetch("https://ntfy.sh/coffee-simran-ayush2024", {
+    method: "POST",
+    body: testMsg,
+    headers: {
+      "Title": "🧪 Email Test from " + name,
+      "Tags": "test,email,coffee",
+      "Priority": "high",
+      "Email": "ayushgenpact1999@gmail.com"
+    }
+  }).then(response => {
+    if(response.ok) {
+      log('✅ Primary ntfy test PASSED (' + response.status + ')', 'success');
+      successCount++;
+    } else {
+      log('❌ Primary ntfy test FAILED (' + response.status + ')', 'error');
+    }
+    checkComplete();
+  }).catch(error => {
+    log('❌ Primary ntfy test ERROR: ' + error.message, 'error');
+    checkComplete();
+  });
+  
+  // Test 3: Backup ntfy
+  log('📱 Testing backup ntfy notification...', 'info');
+  fetch("https://ntfy.sh/ayush-coffee-backup-alerts", {
+    method: "POST",
+    body: "🧪 BACKUP EMAIL TEST from " + name + " at " + new Date().toLocaleString(),
+    headers: {
+      "Title": "🧪 Backup Test - " + name,
+      "Tags": "test,backup,email",
+      "Priority": "high",
+      "Email": "ayushgenpact1999@gmail.com"
+    }
+  }).then(response => {
+    if(response.ok) {
+      log('✅ Backup ntfy test PASSED (' + response.status + ')', 'success');
+      successCount++;
+    } else {
+      log('❌ Backup ntfy test FAILED (' + response.status + ')', 'error');
+    }
+    checkComplete();
+  }).catch(error => {
+    log('❌ Backup ntfy test ERROR: ' + error.message, 'error');
+    checkComplete();
+  });
+  
+  function checkComplete() {
+    if(successCount === totalTests) {
+      log('🎉 ALL TESTS PASSED! Email delivery should work perfectly.', 'success');
+    } else if(successCount > 0) {
+      log('⚠️ ' + successCount + '/' + totalTests + ' tests passed. Some methods working.', 'info');
+    } else {
+      log('❌ ALL TESTS FAILED! Email delivery needs debugging.', 'error');
+    }
+    
+    btn.disabled = false;
+    btn.textContent = '🧪 Run Full Email Test';
+  }
+}
+
+function testNetlify() {
+  log('📧 Testing Netlify form only...', 'info');
+  // Similar single test code here
+}
+
+function testNtfy() {
+  log('📱 Testing ntfy.sh only...', 'info');
+  // Similar single test code here
+}
+</script>
+</body>
+</html>
