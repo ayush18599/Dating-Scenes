@@ -1,674 +1,18 @@
-<!-- <!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="format-detection" content="telephone=no">
-<title>The Coffee Compatibility Test</title>
-<link rel="preload" href="https://open.spotify.com/embed/iframe-api/v1" as="script">
-<link rel="dns-prefetch" href="https://ntfy.sh">
-<link rel="dns-prefetch" href="https://open.spotify.com">
-<meta name="description" content="A fun coffee compatibility test to plan the perfect coffee date">
-<style>
-:root{--bg:#faf7f2;--card:#ffffff;--ink:#3e2723;--muted:#8d6e63;--accent:#d84315;--accent2:#ff8a50;--line:#efebe9;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#2e1a16;--card:#3e2723;--ink:#f5e6d3;--muted:#bcaaa4;--line:#5d3e37}}
-:root[data-theme="dark"]{--bg:#2e1a16;--card:#3e2723;--ink:#f5e6d3;--muted:#bcaaa4;--line:#5d3e37}
-*{box-sizing:border-box}
-html,body{margin:0;min-height:100%}
-body{background:var(--bg);color:var(--ink);font-family:"Poppins",system-ui,-apple-system,Segoe UI,sans-serif;display:flex;justify-content:center;padding:20px 16px}
-.wrap{width:100%;max-width:480px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:24px;padding:28px 22px;box-shadow:0 12px 40px rgba(216,67,21,.12);animation:pop .35s ease}
-@keyframes pop{from{opacity:0;transform:translateY(12px) scale(.98)}to{opacity:1;transform:none}}
-.emoji{font-size:56px;display:block;text-align:center;animation:wob 2.4s ease-in-out infinite}
-@keyframes wob{50%{transform:rotate(-8deg) scale(1.08)}}
-h1{font-size:26px;line-height:1.2;text-align:center;margin:12px 0 8px}
-h2{font-size:20px;line-height:1.3;margin:6px 0 16px}
-p{color:var(--muted);line-height:1.55;margin:0 0 16px}
-.center{text-align:center}
-.bar{height:6px;background:var(--line);border-radius:6px;margin-bottom:18px;overflow:hidden}
-.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width .4s}
-button,input,textarea{font:inherit}
-.btn{width:100%;border:0;border-radius:16px;padding:15px;background:linear-gradient(90deg,var(--accent),var(--accent2));color:#fff;font-weight:600;font-size:16px;cursor:pointer;transition:transform .15s}
-.btn:active{transform:scale(.97)}
-.btn:disabled{opacity:.4;cursor:not-allowed}
-.opt{display:block;width:100%;text-align:left;border:2px solid var(--line);background:transparent;color:var(--ink);border-radius:16px;padding:14px 16px;margin-bottom:10px;cursor:pointer;transition:.15s}
-.opt:hover{border-color:var(--accent)}
-.opt.sel{border-color:var(--accent);background:rgba(216,67,21,.12)}
-.chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}
-.chip{border:2px solid var(--line);background:transparent;color:var(--ink);border-radius:999px;padding:9px 15px;cursor:pointer}
-.chip.sel{border-color:var(--accent);background:var(--accent);color:#fff}
-label.l{display:block;font-weight:600;font-size:14px;margin:6px 0 8px}
-input[type=text]{width:100%;padding:14px;border-radius:14px;border:2px solid var(--line);background:transparent;color:var(--ink);margin-bottom:16px}
-textarea{width:100%;min-height:130px;padding:14px;border-radius:14px;border:2px solid var(--line);background:transparent;color:var(--ink);margin-bottom:12px;resize:vertical}
-.score{font-size:48px;font-weight:700;text-align:center;background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent}
-.small{font-size:13px;text-align:center;margin-top:12px}
-.heart{position:fixed;bottom:-30px;font-size:22px;animation:rise 3s linear forwards;pointer-events:none}
-@keyframes rise{to{transform:translateY(-110vh) rotate(25deg);opacity:0}}
-
-.night{background:radial-gradient(circle at 50% 30%,#6d4c2a,#3e2723 70%);border-color:#8d6e63;color:#fff;text-align:center;min-height:430px;display:flex;flex-direction:column;align-items:center;justify-content:center}
-.night p{color:#f5e6d3}
-.orb{--p:0;position:relative;width:150px;height:150px;border-radius:50%;margin:22px auto;display:flex;align-items:center;justify-content:center;font-size:58px;cursor:pointer;user-select:none;-webkit-user-select:none;touch-action:none;background:conic-gradient(#ff8a50 calc(var(--p)*1%),rgba(255,255,255,.12) 0);animation:beat 1.3s ease-in-out infinite}
-.orb::before{content:"";position:absolute;inset:8px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#8d5524,#3e2723)}
-.orb span{position:relative;filter:drop-shadow(0 0 14px #ff8a50)}
-@keyframes beat{50%{transform:scale(1.06);box-shadow:0 0 50px rgba(255,138,80,.55)}}
-.orb.shake{animation:shk .35s}
-@keyframes shk{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
-.type{min-height:90px;font-size:19px;line-height:1.6;color:#fff;margin:10px 0 18px}
-.cur::after{content:"|";animation:bl 1s steps(1) infinite}
-@keyframes bl{50%{opacity:0}}
-.spark{position:fixed;width:8px;height:8px;border-radius:50%;background:#ff8a50;box-shadow:0 0 10px #ff8a50;pointer-events:none;animation:fd .8s forwards;z-index:9}
-@keyframes fd{to{transform:translateY(-24px) scale(0);opacity:0}}
-.cal{border:2px solid var(--line);border-radius:18px;padding:12px;margin-bottom:18px}
-.ch{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
-.nv{border:0;background:transparent;color:var(--accent);font-size:26px;cursor:pointer;padding:0 10px}
-.nv:disabled{opacity:.25;cursor:default}
-.cg{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center}
-.wd{font-style:normal;font-size:12px;color:var(--muted);padding:4px 0}
-.dy{aspect-ratio:1;border:0;border-radius:50%;background:transparent;color:var(--ink);cursor:pointer;font-size:14px}
-.dy:hover:not(:disabled){background:rgba(216,67,21,.15)}
-.dy:disabled{opacity:.25;cursor:default}
-.dy.sel{background:var(--accent);color:#fff;font-weight:600}
-.opt.wrong{animation:shk .35s;opacity:.55}
-.np{display:flex;align-items:center;justify-content:center;gap:8px;width:max-content;max-width:100%;margin:16px auto 0;padding:7px 14px;border-radius:999px;border:1px solid var(--line);background:var(--card);color:var(--muted);font-size:12px;text-decoration:none;transition:opacity .3s}
-.np:hover{color:var(--accent)}
-.eq{display:flex;align-items:flex-end;gap:2px;height:12px}
-.eq i{width:3px;background:var(--accent);border-radius:2px;animation:eq 1s ease-in-out infinite}
-.eq i:nth-child(2){animation-delay:.25s}.eq i:nth-child(3){animation-delay:.5s}
-@keyframes eq{0%,100%{height:3px}50%{height:12px}}
-.spw{margin:16px auto 0;border-radius:14px;overflow:hidden;max-width:100%}
-.spw iframe{display:block;border:0}
-</style>
-</head>
-<body>
-<div class="wrap"><div class="card" id="app"></div></div>
-<form name="coffee-response" method="POST" data-netlify="true" data-netlify-recaptcha="true" hidden>
-    <input name="name">
-    <input name="date">
-    <input name="time">
-    <input name="coffee-preference">
-    <input name="answers">
-    <input name="contact-email">
-    <textarea name="message"></textarea>
-</form>
-<script>
-var name = "", step = 0, answers = [], day = "", time = "", coffee = "";
-var app = document.getElementById("app");
-
-var quiz = [
- {q:"Pick your coffee vibe: (there's definitely a right answer)", o:["☕ Classic cappuccino, keep it simple","🍃 Something fancy with oat milk","🧊 Iced coffee, always and forever","🎲 I trust your choice completely"]},
- {q:"The perfect coffee date includes…", o:["😂 Bad jokes and great conversation","📚 A cozy corner and deep talks","🥐 Amazing pastries (non-negotiable)","🚶‍♀️ A walk afterward to extend the fun"]},
- {q:"It's your turn to order. What happens?", o:["🤔 I take 5 minutes deciding","⚡ Quick decision, I know what I want","😅 I'll have whatever you're having","🎯 I order something completely random"]},
- {q:"The coffee date goes well. What's next?", o:["🏠 Let's call it a perfect evening","🍕 Late night food adventure?","☕ One more coffee, different place","🌙 Let's keep talking until they kick us out"]}
-];
-
-function render(h){app.className="card";app.innerHTML=h;app.style.animation="none";app.offsetHeight;app.style.animation=""}
-function esc(s){return s.replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
-
-function intro(){setTrack(0);
- render('<span class="emoji">☕</span><h1>Hey Simran! You\'ve been selected.</h1><p class="center">A very important, very scientific coffee compatibility test. Takes 60 seconds. No pressure (but there might be a right answer).</p><label class="l">What should I call you?</label><input type="text" id="nm" placeholder="Your name" autocomplete="off"><button class="btn" id="go">Start the test</button>');
- var i=document.getElementById("nm"),b=document.getElementById("go");
- b.onclick=function(){
-   name=i.value.trim();
-   if(!name){i.focus();i.style.borderColor="var(--accent)";return}
-   // Try to play music on user interaction
-   setTimeout(function(){tryPlay()}, 300);
-   hearts(6);
-   step=0;
-   question();
- };
- i.onkeydown=function(e){if(e.key==="Enter")b.click()};
- // Also try to play when user starts typing
- i.onfocus=function(){setTimeout(function(){tryPlay()}, 200)};
-}
-
-function question(){
- // Set track based on current question step
- var questionTrack = step + 1; // Questions use tracks 1-4
- console.log("🎵 Setting track " + questionTrack + " for question " + (step + 1));
- setTrack(questionTrack);
- 
- var q=quiz[step],pct=Math.round(step/quiz.length*100);
- var h='<div class="bar"><i style="width:'+pct+'%"></i></div><p style="margin-bottom:4px">Question '+(step+1)+' of '+quiz.length+'</p><h2>'+q.q+'</h2>';
- q.o.forEach(function(t,i){h+='<button class="opt" data-i="'+i+'">'+t+'</button>'});
- render(h);
- [].forEach.call(app.querySelectorAll(".opt"),function(b){b.onclick=function(){
-  var t=b,d=350;
-  // Try to play music on user interaction
-  setTimeout(function(){tryPlay()}, 100);
-  if(step===0){t=app.querySelector('.opt[data-i="3"]');if(t!==b){b.classList.add("wrong");d=900}}
-  t.classList.add("sel");answers[step]=t.textContent;
-  
-  setTimeout(function(){
-   step++;
-   if(step<quiz.length){
-    // Force track change with delay to ensure new song loads
-    console.log("🎵 Moving to next question, will change track");
-    setTimeout(function(){
-     question(); // Next question (will set new track)
-     setTimeout(function(){tryPlay()}, 200); // Try to play new track
-    }, 100);
-   } else {
-    console.log("🎵 Moving to analysis phase");
-    setTimeout(function(){
-     analyzing(); // Move to analysis
-     setTimeout(function(){tryPlay()}, 200);
-    }, 100);
-   }
-  },d);
- }});
-}
-
-function analyzing(){setTrack(4); // Use closing track for analysis
- render('<span class="emoji">🧪</span><h1>Analyzing your coffee preferences…</h1><p class="center" id="msg">Consulting the baristas</p><div class="bar"><i id="pb" style="width:0%"></i></div>');
- var lines=["Consulting the baristas","Checking caffeine compatibility","Calculating conversation potential","Cross-referencing pastry preferences"],n=0;
- var t=setInterval(function(){n++;document.getElementById("pb").style.width=(n*25)+"%";if(n<4)document.getElementById("msg").textContent=lines[n];if(n>=4){clearInterval(t);result()}},650);
-}
-
-function result(){setTrack(5); // Use Baby Keem "16" for results onwards
- hearts(14);
- render('<span class="emoji">🎉</span><h1>Results are in, '+esc(name)+'</h1><div class="score">98%</div><p class="center"><b style="color:var(--ink)">Verdict: We\'d have an amazing coffee date.</b><br>The algorithms say we should definitely meet for coffee, and that you have impeccable taste in answers. The only variable left is <i>when</i> and <i>where</i>. Your move!</p><button class="btn" id="nx">Let\'s plan this ☕</button>');
- document.getElementById("nx").onclick=schedule;
-}
-
-function schedule(){setTrack(5); // Continue Baby Keem "16" for scheduling
- var times=["Morning coffee (10-11 AM)","Afternoon break (2-3 PM)","Evening coffee (after 7 PM)"];
- var h='<h2>Perfect! Let\'s lock in the details</h2><label class="l">Which day works for you?</label><div id="cal" class="cal"></div><label class="l">What time suits you best?</label><div class="chips" id="t">';
- times.forEach(function(x){h+='<button class="chip" data-v="'+x+'">'+x+'</button>'});
- h+='</div><button class="btn" id="ok" disabled>It\'s a date! ☕</button>';
- render(h);
- var ok=document.getElementById("ok");
- function bind(id,set){[].forEach.call(document.querySelectorAll("#"+id+" .chip"),function(c){c.onclick=function(){
-  [].forEach.call(document.querySelectorAll("#"+id+" .chip"),function(o){o.classList.remove("sel")});
-  c.classList.add("sel");set(c.dataset.v);ok.disabled=!(day&&time)}})}
- var n=new Date();calY=n.getFullYear();calM=n.getMonth();selTs=0;day="";time="";buildCal(function(){ok.disabled=!(day&&time)});bind("t",function(v){time=v});
- ok.onclick=final;
-}
-
-function final(){setTrack(5); // Use Baby Keem "16" for final confirmation
- notify();hearts(22);
- render('<span class="emoji">✅</span><h1>Coffee date confirmed! ☕</h1><p class="center">Perfect! I\'ve noted everything down and will be in touch soon to finalize the location. Can\'t wait for some great coffee and even better conversation!</p><div style="border:2px dashed var(--line);border-radius:16px;padding:14px;text-align:center;line-height:1.9"><b>📅 '+esc(day)+'</b><br>🕐 '+esc(time)+'</div><div id="submit-status" style="margin-top:15px;padding:10px;border-radius:8px;background:#e8f5e8;border:1px solid #4caf50;color:#2e7d32;font-size:14px;text-align:center">📤 Response submitted successfully! You should hear back soon.</div><p class="small">Thanks for taking the test, '+esc(name)+' ☕ This is going to be fun!</p>');
-}
-
-var calY,calM,selTs=0;
-function buildCal(cb){
- var el=document.getElementById("cal"),now=new Date();now.setHours(0,0,0,0);
- var max=new Date(now);max.setDate(max.getDate()+60);
- var first=new Date(calY,calM,1),sd=(first.getDay()+6)%7,dim=new Date(calY,calM+1,0).getDate();
- var canPrev=(calY>now.getFullYear()||calM>now.getMonth()),canNext=new Date(calY,calM+1,1)<=max;
- var h='<div class="ch"><button class="nv" id="pv"'+(canPrev?'':' disabled')+'>‹</button><b>'+first.toLocaleString("en",{month:"long",year:"numeric"})+'</b><button class="nv" id="nxm"'+(canNext?'':' disabled')+'>›</button></div><div class="cg">';
- ["M","T","W","T","F","S","S"].forEach(function(w){h+='<i class="wd">'+w+'</i>'});
- for(var b=0;b<sd;b++)h+='<i></i>';
- for(var d=1;d<=dim;d++){var dt=new Date(calY,calM,d),off=dt<=now||dt>max,sel=dt.getTime()===selTs;
-  h+='<button class="dy'+(sel?' sel':'')+'" data-t="'+dt.getTime()+'"'+(off?' disabled':'')+'>'+d+'</button>'}
- el.innerHTML=h+'</div>';
- document.getElementById("pv").onclick=function(){calM--;if(calM<0){calM=11;calY--}buildCal(cb)};
- document.getElementById("nxm").onclick=function(){calM++;if(calM>11){calM=0;calY++}buildCal(cb)};
- [].forEach.call(el.querySelectorAll(".dy"),function(x){x.onclick=function(){
-  selTs=+x.dataset.t;day=new Date(selTs).toLocaleDateString("en-GB",{weekday:"long",day:"numeric",month:"long"});buildCal(cb);cb()}});
-}
-
-function hearts(n){
- var e=["💖","✨","☕","🥐","💫"];
- for(var i=0;i<n;i++)(function(i){setTimeout(function(){
-  var s=document.createElement("span");s.className="heart";s.textContent=e[i%e.length];
-  s.style.left=Math.random()*95+"vw";s.style.fontSize=(16+Math.random()*20)+"px";
-  document.body.appendChild(s);setTimeout(function(){s.remove()},3100)},i*110)})(i);
-}
-
-var NTFY="coffee-simran-2024"; // notification topic
-var sent=false;
-function notify(){
- if(sent)return;sent=true;
- 
- // Get coffee preference from quiz answers if available
- var coffeePref = answers[0] ? answers[0] : "Not specified";
- 
- // Show immediate feedback to user
- console.log("🚀 Sending notifications...");
- 
- var formData = {
-   "form-name": "coffee-response",
-   "name": name,
-   "date": day,
-   "time": time,
-   "coffee-preference": coffeePref,
-   "answers": answers.join(" | "),
-   "contact-email": "ayushgenpact1999@gmail.com",
-   "message": "☕ COFFEE DATE SUCCESS! From: " + name + " | Date: " + day + " | Time: " + time + " | Coffee: " + coffeePref + " | Quiz: " + answers.join(" | ") + " | Timestamp: " + new Date().toISOString()
- };
- 
- var successCount = 0;
- var totalMethods = 4;
- 
- // Method 1: Netlify form submission with retry
- function submitNetlifyForm(retryCount = 0) {
-   console.log("📧 Attempting Netlify form submission (attempt " + (retryCount + 1) + ")...");
-   
-   fetch("/", {
-     method: "POST",
-     headers: {
-       "Content-Type": "application/x-www-form-urlencoded",
-       "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
-     },
-     body: new URLSearchParams(formData).toString()
-   }).then(response => {
-     if(response.ok || response.status === 200 || response.status === 302) {
-       console.log("✅ Netlify form submitted successfully:", response.status);
-       successCount++;
-       updateStatus();
-     } else {
-       console.warn("⚠️ Netlify form response:", response.status);
-       if(retryCount < 2) {
-         setTimeout(() => submitNetlifyForm(retryCount + 1), 1000 * (retryCount + 1));
-       }
-     }
-   }).catch(error => {
-     console.error("❌ Netlify form error:", error);
-     if(retryCount < 2) {
-       setTimeout(() => submitNetlifyForm(retryCount + 1), 2000 * (retryCount + 1));
-     }
-   });
- }
- 
- // Method 2: Primary ntfy notification with retry
- function sendPrimaryNotification(retryCount = 0) {
-   var detailedMsg="🎉 COFFEE DATE SUCCESS! 🎉\n\n" +
-    "Name: "+name+"\n" +
-    "Selected Date: "+day+"\n" + 
-    "Preferred Time: "+time+"\n" +
-    "Coffee Preference: "+coffeePref+"\n\n" +
-    "Quiz Answers:\n" +
-    "Q1 (Coffee vibe): "+answers[0]+"\n" +
-    "Q2 (Perfect date): "+answers[1]+"\n" +
-    "Q3 (Ordering style): "+answers[2]+"\n" +
-    "Q4 (What's next): "+answers[3]+"\n\n" +
-    "🎵 Songs: Summertime in Paris, Espresso, I Adore You, Hold On We're Going Home, Breathe Deeper, 16\n" +
-    "⏰ Submitted: " + new Date().toLocaleString() + "\n" +
-    "🔗 From: https://blackcoffeex.netlify.app";
-   
-   console.log("📱 Sending primary notification (attempt " + (retryCount + 1) + ")...");
-   
-   fetch("https://ntfy.sh/coffee-simran-ayush2024", {
-     method: "POST",
-     body: detailedMsg,
-     headers: {
-       "Title": "☕ " + name + " said YES to coffee date!",
-       "Tags": "coffee,heart,urgent,simran",
-       "Priority": "urgent",
-       "Email": "ayushgenpact1999@gmail.com"
-     }
-   }).then(response => {
-     if(response.ok) {
-       console.log("✅ Primary notification sent:", response.status);
-       successCount++;
-       updateStatus();
-     } else {
-       console.warn("⚠️ Primary notification response:", response.status);
-       if(retryCount < 2) {
-         setTimeout(() => sendPrimaryNotification(retryCount + 1), 1500 * (retryCount + 1));
-       }
-     }
-   }).catch(error => {
-     console.error("❌ Primary notification error:", error);
-     if(retryCount < 2) {
-       setTimeout(() => sendPrimaryNotification(retryCount + 1), 2500 * (retryCount + 1));
-     }
-   });
- }
- 
- // Method 3: Backup notification with retry
- function sendBackupNotification(retryCount = 0) {
-   console.log("📱 Sending backup alert (attempt " + (retryCount + 1) + ")...");
-   
-   var alertMsg = "🚨 URGENT: " + name + " responded to coffee date!\n\n" +
-    "Quick Summary:\n" +
-    "📅 " + day + " at " + time + "\n" +
-    "☕ " + coffeePref + "\n" +
-    "⏰ " + new Date().toLocaleString() + "\n\n" +
-    "Check main channel for full details!";
-   
-   fetch("https://ntfy.sh/ayush-coffee-backup-alerts", {
-     method: "POST",
-     body: alertMsg,
-     headers: {
-       "Title": "🚨 Coffee Date Alert - " + name,
-       "Tags": "urgent,backup,coffee",
-       "Priority": "max",
-       "Email": "ayushgenpact1999@gmail.com"
-     }
-   }).then(response => {
-     if(response.ok) {
-       console.log("✅ Backup notification sent:", response.status);
-       successCount++;
-       updateStatus();
-     } else {
-       console.warn("⚠️ Backup notification response:", response.status);
-       if(retryCount < 1) {
-         setTimeout(() => sendBackupNotification(retryCount + 1), 2000);
-       }
-     }
-   }).catch(error => {
-     console.error("❌ Backup notification error:", error);
-     if(retryCount < 1) {
-       setTimeout(() => sendBackupNotification(retryCount + 1), 3000);
-     }
-   });
- }
- 
- // Method 4: Local storage (always works)
- function saveToLocalStorage() {
-   try {
-     var responses = JSON.parse(localStorage.getItem('coffeeResponses') || '[]');
-     responses.push({
-       name: name,
-       date: day,
-       time: time,
-       coffeePref: coffeePref,
-       answers: answers,
-       timestamp: new Date().toISOString(),
-       userAgent: navigator.userAgent,
-       url: window.location.href
-     });
-     localStorage.setItem('coffeeResponses', JSON.stringify(responses));
-     console.log("💾 Response saved to localStorage");
-     successCount++;
-     updateStatus();
-   } catch(e) {
-     console.error("❌ localStorage error:", e);
-   }
- }
- 
- function updateStatus() {
-   if(successCount === totalMethods) {
-     console.log("🎉 ALL notification methods successful!");
-   } else if(successCount > 0) {
-     console.log("✅ " + successCount + "/" + totalMethods + " notification methods successful");
-   }
- }
- 
- // Execute all methods with staggered delays to avoid rate limiting
- submitNetlifyForm();
- setTimeout(() => sendPrimaryNotification(), 500);
- setTimeout(() => sendBackupNotification(), 1000);
- setTimeout(() => saveToLocalStorage(), 100);
-}
-
-function lock(){
- render('');app.className="card night";
- app.innerHTML='<p style="letter-spacing:2px;font-size:12px;text-transform:uppercase">New message</p><h1 style="color:#fff">Someone wants to ask you out</h1><div class="orb" id="orb"><span>☕</span></div><div class="bar"><i id="pb" style="width:0%"></i></div><p id="hint">Hold the coffee cup to read ☕</p>';
- var o=document.getElementById("orb"),h=document.getElementById("hint"),pb=document.getElementById("pb"),p=0,on=false,done=false;
- function tick(){
-  if(done)return;
-  p+=on?1.8:-3;p=Math.max(0,Math.min(100,p));
-  o.style.setProperty("--p",p);pb.style.width=p+"%";
-  h.textContent=p>66?"Almost there…":p>25?"Keep holding… ☕":"Hold the coffee cup to read ☕";
-  if(on&&navigator.vibrate&&p%20<2)try{navigator.vibrate(8)}catch(e){}
-  if(p>=100){done=true;unlocked();return}
-  requestAnimationFrame(tick);
- }
- o.onpointerdown=function(e){e.preventDefault();on=true};
- ["pointerup","pointerleave","pointercancel"].forEach(function(t){o.addEventListener(t,function(){
-  if(on&&p<100&&p>10){o.classList.add("shake");setTimeout(function(){o.classList.remove("shake")},350)}on=false})});
- requestAnimationFrame(tick);
-}
-
-function unlocked(){
- setTrack(0);
- hearts(24);
- 
- // Test Spotify availability
- setTimeout(function(){
-   if(!ctl || !spotifyReady) {
-     console.log("⚠️ Spotify not available, music will use fallback links");
-   }
- }, 3000);
- 
- // VERY aggressive autoplay attempts
- var playAttempts = 0;
- var maxAttempts = 15;
- 
- function attemptPlay() {
-   if(playAttempts < maxAttempts) {
-     playAttempts++;
-     console.log("🎵 Autoplay attempt " + playAttempts);
-     
-     if(ctl && spotifyReady) {
-       try {
-         ctl.play();
-         console.log("✅ Spotify autoplay successful");
-       } catch(e) {
-         console.log("❌ Spotify autoplay failed:", e);
-         if(playAttempts < maxAttempts) {
-           setTimeout(attemptPlay, 800 * playAttempts);
-         }
-       }
-     } else {
-       console.log("⚠️ Spotify not ready, trying again...");
-       if(playAttempts < maxAttempts) {
-         setTimeout(attemptPlay, 1000 * playAttempts);
-       }
-     }
-   }
- }
- 
- // Start autoplay attempts
- setTimeout(attemptPlay, 500);
- 
- app.innerHTML='<div class="type cur" id="ty"></div><button class="btn" id="c" style="display:none">I\'m curious ☕</button>';
- var lines="Hi Simran! 👋\n\nYou have been selected for a coffee date compatibility test ☕\n\nSomeone thinks we might have great chemistry over coffee…\n\nBut first, a quick test to confirm…",i=0,ty=document.getElementById("ty");
- (function nx(){
-  if(i<=lines.length){
-   ty.innerHTML=esc(lines.slice(0,i)).replace(/\n/g,"<br>");
-   i++;
-   // Try to play during typing animation
-   if(i % 15 === 0) attemptPlay();
-   setTimeout(nx,lines[i-2]==="\n"?250:45);
-  } else {
-   ty.classList.remove("cur");
-   var b=document.getElementById("c");
-   b.style.display="block";
-   b.onclick=function(){
-     // Final attempt with user interaction
-     setTimeout(function(){attemptPlay();tryPlay()}, 200);
-     intro();
-   }
-  }
- })();
-}
-
-document.addEventListener("pointermove",function(e){
- if(Math.random()>.35)return;
- var d=document.createElement("span");d.className="spark";d.style.left=e.clientX+"px";d.style.top=e.clientY+"px";
- document.body.appendChild(d);setTimeout(function(){d.remove()},800)});
-
-// Spotify Integration with verified track IDs
-var tracks=[
- {l:"Now playing",t:"Summertime in Paris",a:"Jaden",id:"6XNANAB7sFvkfho6bMCp7o"},
- {l:"Now playing",t:"Espresso",a:"Sabrina Carpenter",id:"2qSkIjg1o9h3YT9RAgYN75"},
- {l:"Now playing",t:"I Adore You",a:"HUGEL, Topic, Arash ft. Daecolm",id:"5nPbKG04fhLkIAjcPFaZq7"},
- {l:"Now playing",t:"Hold On, We're Going Home",a:"Drake ft. Majid Jordan",id:"7nBFpFa8ZFMUqzwPmWaD6u"},
- {l:"Now playing",t:"Breathe Deeper",a:"Tame Impala",id:"3jPYBYxDe4hHhMWjCMZZZc"},
- {l:"Closing track",t:"16",a:"Baby Keem",id:"1Is8hGpkGMiePASAxBluxM"}
-],curTr=-1,ctl=null,np=document.createElement("a"),spw=document.createElement("div");
-
-np.className="np";np.target="_blank";np.rel="noopener";
-spw.className="spw";spw.style.display="none";spw.innerHTML='<div id="sp"></div>';
-document.querySelector(".wrap").appendChild(spw);
-document.querySelector(".wrap").appendChild(np);
-
-var spotifyReady = false;
-
-function applyTrack(){
- var k=tracks[curTr];
- if(!k) {
-   console.log("❌ No track found for index", curTr);
-   return;
- }
- 
- console.log("🎵 Applying track:", k.t, "by", k.a, "ID:", k.id);
- 
- var on=!!(ctl&&k.id&&spotifyReady);
- spw.style.display=on?"block":"none";
- np.style.display=on?"none":"flex";
- 
- if(on){
-   try{
-     console.log("🎵 Loading Spotify track:", k.id);
-     ctl.loadUri("spotify:track:"+k.id);
-     
-     // Multiple autoplay attempts with different strategies
-     setTimeout(function(){
-       try{
-         ctl.play();
-         console.log("✅ Autoplay attempt 1 successful");
-       }catch(e){
-         console.log("❌ Autoplay attempt 1 failed:", e);
-         // Try again with longer delay
-         setTimeout(function(){
-           try{
-             ctl.play();
-             console.log("✅ Autoplay attempt 2 successful");
-           }catch(e2){
-             console.log("❌ Autoplay attempt 2 failed:", e2);
-           }
-         }, 1000);
-       }
-     }, 800);
-   }catch(e){
-     console.log("❌ Load track error:",e);
-   }
- }
- 
- // Always show the fallback link
- np.href="https://open.spotify.com/track/"+k.id;
- np.innerHTML='<span class="eq"><i></i><i></i><i></i></span><span>'+k.l+' · '+k.t+' — '+k.a+' ↗</span>';
- np.style.opacity=1;
-}
-
-function setTrack(i){
- if(i < 0 || i >= tracks.length) {
-   console.log("❌ Invalid track index:", i);
-   return;
- }
- 
- if(i===curTr){
-   console.log("🎵 Track " + i + " already playing, trying to resume");
-   setTimeout(function(){tryPlay()}, 200);
-   return;
- }
- 
- console.log("🎵 Changing from track " + curTr + " to track " + i + " (" + tracks[i].t + ")");
- curTr=i;
- np.style.opacity=0;
- 
- setTimeout(function(){
-   applyTrack();
-   setTimeout(function(){tryPlay()}, 500);
- }, 300);
-}
-
-function tryPlay(){
- if(!ctl) {
-   console.log("❌ Spotify controller not ready");
-   return;
- }
- 
- if(!spotifyReady) {
-   console.log("❌ Spotify API not ready");
-   return;
- }
- 
- try{
-   ctl.play();
-   console.log("✅ Music play attempt successful");
- }catch(e){
-   console.log("❌ Play failed:",e);
-   // Retry with delay
-   setTimeout(function(){
-     try{
-       ctl.play();
-       console.log("✅ Music play retry successful");
-     }catch(e2){
-       console.log("❌ Play retry failed:",e2);
-     }
-   }, 1500);
- }
-}
-
-// Enhanced Spotify API initialization
-window.onSpotifyIframeApiReady=function(api){
- console.log("🎵 Spotify API Ready");
- try{
-   api.createController(document.getElementById("sp"),{
-     uri:"spotify:track:"+tracks[0].id,
-     width:"100%",
-     height:80,
-     theme:"0"
-   },function(c){
-     ctl=c;
-     spotifyReady=true;
-     console.log("✅ Spotify controller created successfully");
-     
-     c.addListener('ready', function() {
-       console.log("✅ Spotify player ready");
-       applyTrack();
-       
-       // Try initial play after everything is ready
-       setTimeout(function(){
-         tryPlay();
-       }, 1000);
-     });
-     
-     c.addListener('playback_update', function(e) {
-       console.log("🎵 Playback update:", e);
-       if(e.isPaused) {
-         console.log("⏸️ Music paused, trying to resume");
-         setTimeout(function(){tryPlay()}, 500);
-       }
-     });
-     
-     // Initial setup
-     applyTrack();
-   });
- }catch(e){
-   console.log("❌ Spotify controller creation failed:",e);
-   spotifyReady=false;
- }
-};
-
-// Load Spotify API
-(function(){
- console.log("🎵 Loading Spotify API...");
- var j=document.createElement("script");
- j.src="https://open.spotify.com/embed/iframe-api/v1";
- j.async=true;
- j.onload=function(){console.log("✅ Spotify API script loaded")};
- j.onerror=function(){console.log("❌ Spotify API script failed to load")};
- document.body.appendChild(j);
-})();
-
-lock();
-</script>
-</body>
-</html> -->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="format-detection" content="telephone=no">
 <meta name="theme-color" content="#2b1710">
 <title>The Coffee Compatibility Test</title>
-<meta name="description" content="A fun coffee compatibility test to plan the perfect coffee date">
+<meta name="description" content="A coffee compatibility test, for one person in particular.">
 <link rel="dns-prefetch" href="https://ntfy.sh">
-<link rel="dns-prefetch" href="https://open.spotify.com">
+<link rel="preconnect" href="https://open.spotify.com">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,600;1,9..144,500&display=swap" rel="stylesheet">
@@ -714,12 +58,12 @@ body{
 h1,h2{font-family:"Fraunces",Georgia,serif;font-weight:600;letter-spacing:-.01em}
 h1{font-size:28px;line-height:1.18;text-align:center;margin:14px 0 10px}
 h2{font-size:22px;line-height:1.25;margin:6px 0 18px}
-h1 em,h2 em{font-style:italic;color:var(--accent)}
 p{color:var(--muted);line-height:1.6;margin:0 0 16px}
 .center{text-align:center}
 .bar{height:6px;background:var(--line);border-radius:6px;margin-bottom:18px;overflow:hidden}
 .bar i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:6px;transition:width .5s cubic-bezier(.3,.8,.3,1)}
 button,input,textarea{font:inherit}
+:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
 .btn{
   width:100%;border:0;border-radius:18px;padding:16px;
   background:linear-gradient(100deg,var(--accent),var(--accent2));color:#fff;font-weight:700;font-size:16px;
@@ -735,6 +79,7 @@ button,input,textarea{font:inherit}
 .opt:hover{border-color:var(--accent);transform:translateY(-1px)}
 .opt.sel{border-color:var(--accent);background:rgba(200,80,31,.14);font-weight:600}
 .opt.wrong{animation:shk .35s;opacity:.5}
+.opt[disabled]{cursor:default}
 .chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px}
 .chip{border:2px solid var(--line);background:transparent;color:var(--ink);border-radius:999px;padding:10px 16px;cursor:pointer;transition:.15s}
 .chip:hover{border-color:var(--accent)}
@@ -743,13 +88,13 @@ label.l{display:block;font-weight:600;font-size:14px;margin:8px 0 8px}
 input[type=text]{width:100%;padding:15px;border-radius:16px;border:2px solid var(--line);background:rgba(255,255,255,.06);color:var(--ink);margin-bottom:16px;outline:none;transition:border-color .15s}
 input[type=text]:focus{border-color:var(--accent)}
 .score{font-family:"Fraunces",Georgia,serif;font-size:64px;font-weight:600;text-align:center;line-height:1;margin:6px 0 14px;background:linear-gradient(90deg,var(--accent),var(--rose));-webkit-background-clip:text;background-clip:text;color:transparent}
-.small{font-size:13px;text-align:center;margin-top:14px}
+.small{font-size:13px;text-align:center;margin-top:14px;color:var(--muted)}
 .ticket{border:2px dashed var(--line);border-radius:18px;padding:16px;text-align:center;line-height:2;color:var(--ink);background:rgba(255,255,255,.05)}
 .heart{position:fixed;bottom:-30px;font-size:22px;animation:rise 3s linear forwards;pointer-events:none;z-index:8}
 @keyframes rise{to{transform:translateY(-110vh) rotate(25deg);opacity:0}}
 @keyframes shk{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
 
-/* floating beans in the background */
+/* floating beans */
 .beans{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
 .bean{position:absolute;width:16px;height:23px;border-radius:50%;background:var(--bean);opacity:.22;animation:drift linear infinite}
 .bean::after{content:"";position:absolute;left:50%;top:10%;bottom:10%;width:2px;margin-left:-1px;background:rgba(255,255,255,.35);border-radius:2px;transform:rotate(12deg)}
@@ -760,21 +105,22 @@ input[type=text]:focus{border-color:var(--accent)}
 .night h1{color:#fff}
 .night p{color:#f7e9d8}
 .night .bar{width:100%;background:rgba(255,255,255,.14)}
-.orb{--p:0;position:relative;width:156px;height:156px;border-radius:50%;margin:24px auto;display:flex;align-items:center;justify-content:center;font-size:60px;cursor:pointer;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;touch-action:none;background:conic-gradient(#ff9a62 calc(var(--p)*1%),rgba(255,255,255,.14) 0);animation:beat 1.4s ease-in-out infinite}
+.orb{--p:0;position:relative;width:156px;height:156px;border-radius:50%;margin:24px auto;display:flex;align-items:center;justify-content:center;font-size:60px;cursor:pointer;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;touch-action:none;border:0;padding:0;background:conic-gradient(#ff9a62 calc(var(--p)*1%),rgba(255,255,255,.14) 0);animation:beat 1.4s ease-in-out infinite}
 .orb::before{content:"";position:absolute;inset:8px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#9a6130,#3e2318)}
 .orb span{position:relative;filter:drop-shadow(0 0 14px #ff9a62)}
 @keyframes beat{50%{transform:scale(1.06);box-shadow:0 0 54px rgba(255,138,80,.55)}}
 .orb.shake{animation:shk .35s}
-.type{min-height:110px;font-size:20px;line-height:1.65;color:#fff;margin:10px 0 20px;font-family:"Fraunces",Georgia,serif}
+.type{min-height:118px;font-size:20px;line-height:1.65;color:#fff;margin:10px 0 20px;font-family:"Fraunces",Georgia,serif}
 .cur::after{content:"|";animation:bl 1s steps(1) infinite}
 @keyframes bl{50%{opacity:0}}
+.skip{background:none;border:0;color:rgba(255,255,255,.6);font-size:12.5px;cursor:pointer;padding:6px}
 .spark{position:fixed;width:8px;height:8px;border-radius:50%;background:#ff9a62;box-shadow:0 0 10px #ff9a62;pointer-events:none;animation:fd .8s forwards;z-index:9}
 @keyframes fd{to{transform:translateY(-24px) scale(0);opacity:0}}
 
 /* calendar */
 .cal{border:2px solid var(--line);border-radius:20px;padding:12px;margin-bottom:18px;background:rgba(255,255,255,.05)}
 .ch{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
-.nv{border:0;background:transparent;color:var(--accent);font-size:26px;cursor:pointer;padding:0 10px}
+.nv{border:0;background:transparent;color:var(--accent);font-size:26px;cursor:pointer;padding:0 10px;line-height:1}
 .nv:disabled{opacity:.25;cursor:default}
 .cg{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center}
 .wd{font-style:normal;font-size:12px;color:var(--muted);padding:4px 0}
@@ -783,35 +129,44 @@ input[type=text]:focus{border-color:var(--accent)}
 .dy:disabled{opacity:.25;cursor:default}
 .dy.sel{background:var(--accent);color:#fff;font-weight:700}
 
-/* music player */
-.player{margin-top:16px}
-.player:not(.on){position:absolute;left:-9999px;top:0;width:300px;opacity:0;pointer-events:none}
-.cap{display:flex;align-items:center;justify-content:center;gap:8px;font-size:12.5px;color:var(--muted);margin-bottom:8px}
-.eq{display:flex;align-items:flex-end;gap:2px;height:12px}
-.eq i{width:3px;background:var(--accent);border-radius:2px;animation:eq 1s ease-in-out infinite}
+/* ---- music player ---- */
+.player{opacity:0;max-height:0;overflow:hidden;transition:opacity .45s ease}
+.player.on{opacity:1;max-height:420px;overflow:visible;margin-top:18px}
+.np{display:flex;align-items:center;gap:9px;padding:0 4px 9px}
+.np-t{flex:1;min-width:0;font-size:12.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.eq{display:flex;align-items:flex-end;gap:2px;height:12px;flex:none}
+.eq i{width:3px;height:3px;background:var(--accent);border-radius:2px;animation:eq 1s ease-in-out infinite}
 .eq i:nth-child(2){animation-delay:.25s}.eq i:nth-child(3){animation-delay:.5s}
 @keyframes eq{0%,100%{height:3px}50%{height:12px}}
+.player.quiet .eq i{animation-play-state:paused}
+.mute{flex:none;border:1px solid var(--line);background:rgba(255,255,255,.08);color:var(--muted);border-radius:999px;width:30px;height:30px;font-size:11px;line-height:1;cursor:pointer;display:grid;place-items:center}
+.mute:hover{color:var(--accent);border-color:var(--accent)}
 #sp iframe{display:block;border:0;border-radius:14px}
-.mh{display:block;margin:10px auto 0;border:0;border-radius:999px;padding:10px 18px;background:var(--accent);color:#fff;font-weight:600;cursor:pointer;box-shadow:0 8px 20px rgba(200,80,31,.35);animation:beat 1.6s ease-in-out infinite}
-.mh[hidden],.fb[hidden]{display:none}
+.tap{display:block;width:100%;margin-top:10px;border:0;border-radius:999px;padding:12px 18px;background:var(--accent);color:#fff;font-weight:600;cursor:pointer;box-shadow:0 8px 20px rgba(200,80,31,.35)}
 .fb{display:block;text-align:center;margin-top:10px;font-size:12.5px;color:var(--accent);text-decoration:none}
+[hidden]{display:none!important}
 
-@media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;animation-iteration-count:1!important}}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
 </style>
 </head>
 <body>
-<div class="beans" id="beans"></div>
+<div class="beans" id="beans" aria-hidden="true"></div>
 <div class="wrap">
   <div class="card" id="app"></div>
+
   <div class="player" id="player">
-    <div class="cap" id="cap"></div>
+    <div class="np">
+      <span class="eq" aria-hidden="true"><i></i><i></i><i></i></span>
+      <span class="np-t" id="npt"></span>
+      <button class="mute" id="mute" type="button" aria-label="Pause the music">&#10073;&#10073;</button>
+    </div>
     <div id="sp"></div>
-    <button class="mh" id="mh" hidden>▶ Tap to start the music</button>
-    <a class="fb" id="fb" target="_blank" rel="noopener" hidden>Open the song in Spotify ↗</a>
+    <button class="tap" id="tap" type="button" hidden>Tap to start the music</button>
+    <a class="fb" id="fb" target="_blank" rel="noopener" hidden>Open the song in Spotify</a>
   </div>
 </div>
 
-<!-- Netlify detects this form at deploy time. Do NOT add recaptcha: it blocks scripted submissions. -->
+<!-- Netlify picks this form up at deploy time. No recaptcha: it blocks scripted submissions. -->
 <form name="coffee-response" method="POST" data-netlify="true" hidden>
   <input type="hidden" name="form-name" value="coffee-response">
   <input name="name">
@@ -824,123 +179,254 @@ input[type=text]:focus{border-color:var(--accent)}
 </form>
 
 <script>
-/* ------------------------------------------------------------------
-   SETTINGS — edit these three things
-   ------------------------------------------------------------------ */
+/* ==================================================================
+   SETTINGS
+   ================================================================== */
 var CONFIG = {
-  // Where the results get sent
+  herName: "Simran",
   toEmail: "ayushgenpact1999@gmail.com",
 
-  // Optional but the MOST reliable email route: get a free access key at
-  // https://web3forms.com (enter your email, they email you the key), paste it here.
+  // Most reliable real-email route. Free key from https://web3forms.com
   web3formsKey: "",
 
-  // Private push-notification topic. ntfy topics are public if guessed, so keep this random.
-  // Install the free "ntfy" app and subscribe to this exact topic name to get instant alerts.
-  ntfyTopic: "cfx-simran-7h3kq9w2zt4m"
+  // Private push topic. ntfy topics are public to anyone who guesses them, so keep it random.
+  ntfyTopic: "cfx-simran-7h3kq9w2zt4m",
+
+  // true  = a different song on every question (what you had)
+  // false = one song for the whole quiz, one for the finale (calmer, fewer reloads)
+  songPerQuestion: true,
+
+  // Don't swap songs more often than this. Stops the player thrashing when
+  // she answers quickly. Set to 0 to swap on literally every question.
+  minSongMs: 14000
 };
 
-var userName = "", step = 0, answers = [], day = "", time = "";
+var userName = "", step = 0, answers = [], picks = [], day = "", time = "";
 var app = document.getElementById("app");
 
 var quiz = [
- {q:"Pick your coffee vibe: (there's definitely a right answer)", o:["☕ Classic cappuccino, keep it simple","🍃 Something fancy with oat milk","🧊 Iced coffee, always and forever","🎲 I trust your choice completely"]},
- {q:"The perfect coffee date includes…", o:["😂 Bad jokes and great conversation","📚 A cozy corner and deep talks","🥐 Amazing pastries (non-negotiable)","🚶‍♀️ A walk afterward to extend the fun"]},
- {q:"It's your turn to order. What happens?", o:["🤔 I take 5 minutes deciding","⚡ Quick decision, I know what I want","😅 I'll have whatever you're having","🎯 I order something completely random"]},
- {q:"The coffee date goes well. What's next?", o:["🏠 Let's call it a perfect evening","🍕 Late night food adventure?","☕ One more coffee, different place","🌙 Let's keep talking until they kick us out"]}
+ {q:"Pick your coffee vibe: (there's definitely a right answer)", o:["\u2615 Classic cappuccino, keep it simple","\uD83C\uDF43 Something fancy with oat milk","\uD83E\uDDCA Iced coffee, always and forever","\uD83C\uDFB2 I trust your choice completely"]},
+ {q:"The perfect coffee date includes\u2026", o:["\uD83D\uDE02 Bad jokes and great conversation","\uD83D\uDCDA A cozy corner and deep talks","\uD83E\uDD50 Amazing pastries (non-negotiable)","\uD83D\uDEB6\u200D\u2640\uFE0F A walk afterward to extend the fun"]},
+ {q:"It's your turn to order. What happens?", o:["\uD83E\uDD14 I take 5 minutes deciding","\u26A1 Quick decision, I know what I want","\uD83D\uDE05 I'll have whatever you're having","\uD83C\uDFAF I order something completely random"]},
+ {q:"The coffee date goes well. What's next?", o:["\uD83C\uDFE0 Let's call it a perfect evening","\uD83C\uDF55 Late night food adventure?","\u2615 One more coffee, different place","\uD83C\uDF19 Let's keep talking until they kick us out"]}
 ];
 
 function render(h){app.className="card";app.innerHTML=h;app.style.animation="none";app.offsetHeight;app.style.animation=""}
 function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
 
-/* ------------------------------------------------------------------
+/* ==================================================================
    MUSIC
-   Song plan:  0 = lock screen + intro   1-4 = questions 1-4
-               4 stays on during "analysing"   5 = results, scheduling, confirmation
-   Rule: every track change is called straight from a tap (button / hold),
-   because browsers only allow audio to start from a user gesture.
-   ------------------------------------------------------------------ */
+
+   Two rules make this work, and breaking either one is what caused the
+   old silent-player bug:
+
+   1. loadUri() + play() must run SYNCHRONOUSLY inside a real tap.
+      No setTimeout wrappers. A browser only grants audio permission to
+      the call stack that started in a user gesture; once you defer with
+      setTimeout the gesture is gone and play() is silently rejected.
+
+   2. One track change per gesture, then stop asking. The old code fired
+      up to 15 retry timers that each called play() again, so a track that
+      did start got re-triggered and restarted from 0:00.
+
+   Cues are therefore attached to the taps that move between screens,
+   not to the screens themselves.
+   ================================================================== */
 var tracks=[
- {l:"Now playing",t:"Summertime in Paris",a:"Jaden",id:"6XNANAB7sFvkfho6bMCp7o"},
- {l:"Now playing",t:"Espresso",a:"Sabrina Carpenter",id:"2qSkIjg1o9h3YT9RAgYN75"},
- {l:"Now playing",t:"I Adore You",a:"HUGEL, Topic, Arash ft. Daecolm",id:"5nPbKG04fhLkIAjcPFaZq7"},
- {l:"Now playing",t:"Hold On, We're Going Home",a:"Drake ft. Majid Jordan",id:"7nBFpFa8ZFMUqzwPmWaD6u"},
- {l:"Now playing",t:"Breathe Deeper",a:"Tame Impala",id:"3jPYBYxDe4hHhMWjCMZZZc"},
- {l:"Closing track",t:"16",a:"Baby Keem",id:"1Is8hGpkGMiePASAxBluxM"}
+ {t:"Summertime in Paris",a:"Jaden",id:"6XNANAB7sFvkfho6bMCp7o"},
+ {t:"Espresso",a:"Sabrina Carpenter",id:"2qSkIjg1o9h3YT9RAgYN75"},
+ {t:"I Adore You",a:"HUGEL, Topic, Arash ft. Daecolm",id:"5nPbKG04fhLkIAjcPFaZq7"},
+ {t:"Hold On, We're Going Home",a:"Drake ft. Majid Jordan",id:"7nBFpFa8ZFMUqzwPmWaD6u"},
+ {t:"Breathe Deeper",a:"Tame Impala",id:"3jPYBYxDe4hHhMWjCMZZZc"},
+ {t:"16",a:"Baby Keem",id:"1Is8hGpkGMiePASAxBluxM"}
 ];
 
-var Music=(function(){
- var ctl=null, cur=-1, want=-1, wantPlay=false, paused=true, playing=false, switching=false, chk=0;
- var box=document.getElementById("player"), cap=document.getElementById("cap"),
-     hint=document.getElementById("mh"), fb=document.getElementById("fb");
+/* which song belongs to which moment */
+var CUE = CONFIG.songPerQuestion
+  ? {open:0, q:[1,2,3,4], analyse:4, finale:5}
+  : {open:0, q:[1,1,1,1], analyse:1, finale:5};
+
+var Music = (function(){
+ var ctl=null, loaded=-1, want=-1, wantPlay=false, paused=true,
+     everPlayed=false, muted=false, startedAt=0, switchUntil=0, timer=0, tries=0;
+ var box  = document.getElementById("player"),
+     npt  = document.getElementById("npt"),
+     tap  = document.getElementById("tap"),
+     fb   = document.getElementById("fb"),
+     mute = document.getElementById("mute");
 
  function label(i){
   var k=tracks[i]; if(!k)return;
-  cap.innerHTML='<span class="eq"><i></i><i></i><i></i></span><span>'+k.l+' · '+esc(k.t)+' — '+esc(k.a)+'</span>';
+  npt.textContent=k.t+" \u2014 "+k.a;
   fb.href="https://open.spotify.com/track/"+k.id;
   box.classList.add("on");
  }
- function showHint(on){hint.hidden=!on}
- function ensure(){
-  clearTimeout(chk);
-  var n=0;
+ function quiet(on){box.classList.toggle("quiet",on)}
+ function askForTap(on){tap.hidden=!on}
+
+ /* One polite nudge sequence. Gives up after 2 tries and asks for a tap. */
+ function nudge(){
+  clearTimeout(timer); tries=0;
   (function loop(){
-   if(!wantPlay||!ctl)return;
-   if(!paused){showHint(false);return}
-   try{ctl.play()}catch(e){}
-   n++;
-   if(n<4)chk=setTimeout(loop,900); else showHint(true);   // autoplay was blocked: ask for one tap
+   timer=setTimeout(function(){
+    if(!wantPlay||muted||!ctl)return;
+    if(!paused){askForTap(false);return}        // it's playing, we're done
+    if(++tries<=2){try{ctl.play()}catch(e){} loop()}
+    else askForTap(true);                       // blocked - she taps once, then it's unlocked for good
+   },1200);
   })();
  }
- function go(i,force){
+
+ /* cue(i)        change song if enough time has passed
+    cue(i,true)   change song now, no matter what  */
+ function cue(i,force){
   if(i<0||i>=tracks.length)return;
+  if(muted){want=i;return}
+
+  var sameTrack = (i===loaded);
+  var tooSoon   = !force && everPlayed && !paused &&
+                  (Date.now()-startedAt < CONFIG.minSongMs);
+  if(tooSoon && !sameTrack) return;             // let the current song breathe
+  if(sameTrack && !paused && !force) return;    // already playing this one
+
   want=i; label(i);
-  if(!ctl)return;                                    // controller not ready yet; applied once it is
-  if(i===cur&&!force)return;                         // same song already loaded: leave it alone
-  wantPlay=true; switching=true; setTimeout(function(){switching=false},3500);
-  if(i!==cur){cur=i;try{ctl.loadUri("spotify:track:"+tracks[i].id)}catch(e){}}
-  try{ctl.play()}catch(e){}
-  chk=setTimeout(ensure,700);
+  if(!ctl)return;                               // controller still loading; applied on ready
+
+  wantPlay=true;
+  switchUntil=Date.now()+4500;                  // ignore the pause events a reload emits
+  if(!sameTrack){loaded=i;try{ctl.loadUri("spotify:track:"+tracks[i].id)}catch(e){}}
+  try{ctl.play()}catch(e){}                     // same tick as the tap: this is the line that matters
+  nudge();
  }
- function fallbackIfNeeded(){ if(!ctl&&want>=0){fb.hidden=false} }
 
  window.onSpotifyIframeApiReady=function(api){
   try{
-   api.createController(document.getElementById("sp"),{uri:"spotify:track:"+tracks[0].id,width:"100%",height:80},function(c){
-    ctl=c; cur=0;
-    c.addListener("playback_update",function(e){
-     var d=(e&&e.data)||{};
-     paused=!!d.isPaused;
-     if(!paused){playing=true;showHint(false)}
-     else if(playing&&!switching){wantPlay=false;playing=false}   // she paused it herself (or the preview ended): respect that
-    });
-    c.addListener("ready",function(){ if(want>=0){var w=want;cur=-1;go(w,true)} });
-    if(want>=0){var w=want;cur=-1;go(w,true)}
-   });
+   api.createController(
+    document.getElementById("sp"),
+    {uri:"spotify:track:"+tracks[Math.max(want,0)].id,width:"100%",height:80},
+    function(c){
+     ctl=c; loaded=Math.max(want,0);
+     c.addListener("playback_update",function(e){
+      var d=(e&&e.data)||{};
+      paused=!!d.isPaused; quiet(paused);
+      if(!paused){
+        if(!everPlayed||Date.now()>switchUntil)startedAt=Date.now();
+        everPlayed=true; askForTap(false);
+        mute.setAttribute("aria-label","Pause the music");
+        mute.innerHTML="&#10073;&#10073;";
+        return;
+      }
+      mute.setAttribute("aria-label","Play the music");
+      mute.innerHTML="&#9654;";
+      if(!everPlayed||Date.now()<switchUntil)return;   // mid-reload, not a real pause
+
+      var ended = d.duration && d.position && (d.duration-d.position)<1500;
+      if(ended){                                      // 30s preview ran out: loop it quietly
+        try{ctl.seek(0);ctl.play()}catch(e){}
+      }else{
+        wantPlay=false;                               // she paused it herself. respect that.
+        clearTimeout(timer);
+      }
+     });
+     /* Apply whatever screen we're already on. Only once - the old code
+        ran this in both the callback and the ready listener, which fired
+        two loadUri calls and cut the song off. */
+     if(want>=0){var w=want;loaded=-1;cue(w,true)}
+    }
+   );
   }catch(e){ctl=null;fb.hidden=false}
  };
- setTimeout(fallbackIfNeeded,7000);
 
- hint.onclick=function(){ if(ctl){wantPlay=true;try{ctl.play()}catch(e){}} showHint(false) };
+ tap.onclick=function(){muted=false;wantPlay=true;if(ctl){try{ctl.play()}catch(e){}}askForTap(false)};
+ mute.onclick=function(){
+  if(!ctl)return;
+  if(paused){muted=false;wantPlay=true;try{ctl.play()}catch(e){}}
+  else{muted=true;wantPlay=false;clearTimeout(timer);askForTap(false);try{ctl.pause()}catch(e){}}
+ };
 
  var s=document.createElement("script");
  s.src="https://open.spotify.com/embed/iframe-api/v1"; s.async=true;
  s.onerror=function(){fb.hidden=false};
  document.body.appendChild(s);
+ setTimeout(function(){if(!ctl&&want>=0)fb.hidden=false},7000);
 
- return {go:go};
+ return {cue:cue};
 })();
 
-/* ------------------------------------------------------------------
+/* ==================================================================
    SCREENS
-   ------------------------------------------------------------------ */
+   ================================================================== */
+function lock(){
+ render("");app.className="card night";
+ app.innerHTML='<p style="letter-spacing:1px;font-size:12px">New message</p>'+
+  '<h1>Someone wants to ask you out</h1>'+
+  '<button class="orb" id="orb" type="button" aria-label="Hold to open the message"><span>\u2615</span></button>'+
+  '<div class="bar"><i id="pb" style="width:0%"></i></div>'+
+  '<p id="hint">Hold the cup to read it</p>';
+ var o=document.getElementById("orb"),h=document.getElementById("hint"),
+     pb=document.getElementById("pb"),p=0,on=false,done=false;
+
+ function tick(){
+  if(done)return;
+  p+=on?1.8:-3;p=Math.max(0,Math.min(100,p));
+  o.style.setProperty("--p",p);pb.style.width=p+"%";
+  h.textContent = p>66?"Almost there\u2026" : p>25?"Keep holding\u2026" : "Hold the cup to read it";
+  if(on&&navigator.vibrate&&p%20<2){try{navigator.vibrate(8)}catch(e){}}
+  if(p>=100){done=true;unlocked();return}
+  requestAnimationFrame(tick);
+ }
+ /* Her first touch is the one moment the browser will let audio start. Use it. */
+ o.addEventListener("pointerdown",function(e){e.preventDefault();on=true;Music.cue(CUE.open,true)});
+ o.addEventListener("contextmenu",function(e){e.preventDefault()});
+ ["pointerup","pointerleave","pointercancel"].forEach(function(t){
+  o.addEventListener(t,function(){
+   if(on&&p<100&&p>10){o.classList.add("shake");setTimeout(function(){o.classList.remove("shake")},350)}
+   on=false;
+  });
+ });
+ requestAnimationFrame(tick);
+}
+
+function unlocked(){
+ hearts(24);
+ var lines="Hi "+CONFIG.herName+"! \uD83D\uDC4B\n\nYou have been selected for a coffee date compatibility test \u2615\n\nSomeone thinks we might have great chemistry over coffee\u2026\n\nBut first, a quick test to confirm\u2026";
+ app.innerHTML='<div class="type cur" id="ty"></div>'+
+   '<button class="btn" id="c" hidden>I\'m curious \u2615</button>'+
+   '<button class="skip" id="sk" type="button">Skip</button>';
+ var i=0,ty=document.getElementById("ty"),t=0;
+
+ function finish(){
+  clearTimeout(t);
+  ty.innerHTML=esc(lines).replace(/\n/g,"<br>");
+  ty.classList.remove("cur");
+  document.getElementById("sk").hidden=true;
+  var b=document.getElementById("c");
+  b.hidden=false;
+  b.onclick=function(){Music.cue(CUE.open,true);intro()};
+ }
+ document.getElementById("sk").onclick=finish;
+
+ (function nx(){
+  if(i<=lines.length){
+   ty.innerHTML=esc(lines.slice(0,i)).replace(/\n/g,"<br>");
+   i++;
+   t=setTimeout(nx,lines[i-2]==="\n"?250:45);
+  } else finish();
+ })();
+}
+
 function intro(){
- Music.go(0);
- render('<span class="emoji">☕</span><h1>Hey Simran! <em>You\'ve been selected.</em></h1><p class="center">A very important, very scientific coffee compatibility test. Takes 60 seconds. No pressure (but there might be a right answer).</p><label class="l">What should I call you?</label><input type="text" id="nm" placeholder="Your name" autocomplete="off"><button class="btn" id="go">Start the test</button>');
+ render('<span class="emoji">\u2615</span>'+
+  '<h1>Hey '+esc(CONFIG.herName)+', you\u2019ve been selected</h1>'+
+  '<p class="center">A very important, very scientific coffee compatibility test. Takes 60 seconds. No pressure (but there might be a right answer).</p>'+
+  '<label class="l" for="nm">What should I call you?</label>'+
+  '<input type="text" id="nm" placeholder="Your name" autocomplete="off">'+
+  '<button class="btn" id="go">Start the test</button>');
  var i=document.getElementById("nm"),b=document.getElementById("go");
  b.onclick=function(){
    userName=i.value.trim();
    if(!userName){i.focus();i.style.borderColor="var(--accent)";return}
+   Music.cue(CUE.q[0]);          // inside the tap
    hearts(6);
    step=0;
    question();
@@ -949,95 +435,142 @@ function intro(){
 }
 
 function question(){
- Music.go(step+1);                       // question 1..4 -> tracks 1..4
  var q=quiz[step],pct=Math.round(step/quiz.length*100);
- var h='<div class="bar"><i style="width:'+pct+'%"></i></div><p style="margin-bottom:4px">Question '+(step+1)+' of '+quiz.length+'</p><h2>'+q.q+'</h2>';
- q.o.forEach(function(t,i){h+='<button class="opt" data-i="'+i+'">'+t+'</button>'});
+ var h='<div class="bar"><i style="width:'+pct+'%"></i></div>'+
+   '<p style="margin-bottom:4px">Question '+(step+1)+' of '+quiz.length+'</p><h2>'+q.q+'</h2>';
+ q.o.forEach(function(t,i){h+='<button class="opt" type="button" data-i="'+i+'">'+t+'</button>'});
  render(h);
- [].forEach.call(app.querySelectorAll(".opt"),function(b){b.onclick=function(){
-  var t=b,d=350;
-  if(step===0){t=app.querySelector('.opt[data-i="3"]');if(t!==b){b.classList.add("wrong");d=900}}
-  t.classList.add("sel");answers[step]=t.textContent;
-  // Change the song right now, inside the tap, so the browser lets it play.
-  var next=step+1;
-  if(next<quiz.length)Music.go(next+1); else Music.go(4);
-  setTimeout(function(){
-   step++;
-   if(step<quiz.length)question(); else analyzing();
-  },d);
- }});
+
+ var opts=[].slice.call(app.querySelectorAll(".opt")), locked=false;
+ opts.forEach(function(b){
+  b.onclick=function(){
+   if(locked)return; locked=true;
+   opts.forEach(function(o){o.disabled=true});
+
+   var target=b,d=350;
+   picks[step]=b.textContent;                       // what she actually tapped
+   if(step===0){                                    // the rigged first question
+    target=app.querySelector('.opt[data-i="3"]');
+    if(target!==b){b.classList.add("wrong");d=900}
+   }
+   target.classList.add("sel");
+   answers[step]=target.textContent;
+
+   /* Cue the next song right here, in the tap. */
+   var next=step+1;
+   Music.cue(next<quiz.length?CUE.q[next]:CUE.analyse);
+
+   setTimeout(function(){
+    step++;
+    if(step<quiz.length)question(); else analyzing();
+   },d);
+  };
+ });
 }
 
 function analyzing(){
- render('<span class="emoji">🧪</span><h1>Analyzing your coffee preferences…</h1><p class="center" id="msg">Consulting the baristas</p><div class="bar"><i id="pb" style="width:0%"></i></div>');
+ render('<span class="emoji">\uD83E\uDDEA</span><h1>Analyzing your coffee preferences\u2026</h1>'+
+   '<p class="center" id="msg">Consulting the baristas</p><div class="bar"><i id="pb" style="width:0%"></i></div>');
  var lines=["Consulting the baristas","Checking caffeine compatibility","Calculating conversation potential","Cross-referencing pastry preferences"],n=0;
- var t=setInterval(function(){n++;document.getElementById("pb").style.width=(n*25)+"%";if(n<4)document.getElementById("msg").textContent=lines[n];if(n>=4){clearInterval(t);result()}},650);
+ var t=setInterval(function(){
+  n++;
+  var pb=document.getElementById("pb"),msg=document.getElementById("msg");
+  if(!pb){clearInterval(t);return}
+  pb.style.width=(n*25)+"%";
+  if(n<4&&msg)msg.textContent=lines[n];
+  if(n>=4){clearInterval(t);result()}
+ },650);
 }
 
 function result(){
  hearts(14);
- render('<span class="emoji">🎉</span><h1>Results are in, '+esc(userName)+'</h1><div class="score">98%</div><p class="center"><b style="color:var(--ink)">Verdict: We\'d have an amazing coffee date.</b><br>The algorithms say we should definitely meet for coffee, and that you have impeccable taste in answers. The only variable left is <i>when</i> and <i>where</i>. Your move!</p><button class="btn" id="nx">Let\'s plan this ☕</button>');
- // The closing song starts on her tap so it is guaranteed to play.
- document.getElementById("nx").onclick=function(){Music.go(5,true);schedule()};
- Music.go(5);
+ render('<span class="emoji">\uD83C\uDF89</span><h1>Results are in, '+esc(userName)+'</h1>'+
+  '<div class="score">98%</div>'+
+  '<p class="center"><b style="color:var(--ink)">Verdict: we\u2019d have an amazing coffee date.</b><br>'+
+  'The algorithms say we should definitely meet for coffee, and that you have impeccable taste in answers. '+
+  'The only variable left is <i>when</i>. Your move.</p>'+
+  '<button class="btn" id="nx">Let\u2019s plan this \u2615</button>');
+ document.getElementById("nx").onclick=function(){Music.cue(CUE.finale,true);schedule()};
 }
 
 function schedule(){
  var times=["Morning coffee (10-11 AM)","Afternoon break (2-3 PM)","Evening coffee (after 7 PM)"];
- var h='<h2>Perfect! <em>Let\'s lock in the details</em></h2><label class="l">Which day works for you?</label><div id="cal" class="cal"></div><label class="l">What time suits you best?</label><div class="chips" id="t">';
- times.forEach(function(x){h+='<button class="chip" data-v="'+x+'">'+x+'</button>'});
- h+='</div><button class="btn" id="ok" disabled>It\'s a date! ☕</button>';
+ var h='<h2>Let\u2019s lock in the details</h2>'+
+   '<label class="l">Which day works for you?</label><div id="cal" class="cal"></div>'+
+   '<label class="l">What time suits you best?</label><div class="chips" id="t">';
+ times.forEach(function(x){h+='<button class="chip" type="button" data-v="'+x+'">'+x+'</button>'});
+ h+='</div><button class="btn" id="ok" disabled>It\u2019s a date \u2615</button>';
  render(h);
+
  var ok=document.getElementById("ok");
- function bind(id,set){[].forEach.call(document.querySelectorAll("#"+id+" .chip"),function(c){c.onclick=function(){
-  [].forEach.call(document.querySelectorAll("#"+id+" .chip"),function(o){o.classList.remove("sel")});
-  c.classList.add("sel");set(c.dataset.v);ok.disabled=!(day&&time)}})}
+ function sync(){ok.disabled=!(day&&time)}
+ [].forEach.call(document.querySelectorAll("#t .chip"),function(c){
+  c.onclick=function(){
+   [].forEach.call(document.querySelectorAll("#t .chip"),function(o){o.classList.remove("sel")});
+   c.classList.add("sel");time=c.dataset.v;sync();
+  };
+ });
  var n=new Date();calY=n.getFullYear();calM=n.getMonth();selTs=0;day="";time="";
- buildCal(function(){ok.disabled=!(day&&time)});
- bind("t",function(v){time=v});
- ok.onclick=final;
+ buildCal(sync);
+ ok.onclick=function(){if(day&&time)final()};
 }
 
 function final(){
  hearts(22);
- render('<span class="emoji">✅</span><h1>Coffee date <em>confirmed!</em> ☕</h1><p class="center">Perfect! I\'ve noted everything down and will be in touch soon to finalize the location. Can\'t wait for some great coffee and even better conversation!</p><div class="ticket"><b>📅 '+esc(day)+'</b><br>🕐 '+esc(time)+'</div><div id="sendstatus" class="small"></div><p class="small">Thanks for taking the test, '+esc(userName)+' ☕ This is going to be fun!</p>');
+ render('<span class="emoji">\u2705</span><h1>Coffee date confirmed</h1>'+
+  '<p class="center">Noted everything down. I\u2019ll be in touch soon about where. '+
+  'Can\u2019t wait for some good coffee and even better conversation.</p>'+
+  '<div class="ticket"><b>\uD83D\uDCC5 '+esc(day)+'</b><br>\uD83D\uDD50 '+esc(time)+'</div>'+
+  '<div id="sendstatus" class="small">Sending your answers\u2026</div>'+
+  '<p class="small">Thanks for taking the test, '+esc(userName)+'.</p>');
  notify();
 }
 
+/* ==================================================================
+   CALENDAR
+   ================================================================== */
 var calY,calM,selTs=0;
 function buildCal(cb){
- var el=document.getElementById("cal"),now=new Date();now.setHours(0,0,0,0);
+ var el=document.getElementById("cal");if(!el)return;
+ var now=new Date();now.setHours(0,0,0,0);
  var max=new Date(now);max.setDate(max.getDate()+60);
  var first=new Date(calY,calM,1),sd=(first.getDay()+6)%7,dim=new Date(calY,calM+1,0).getDate();
  var canPrev=(calY>now.getFullYear()||calM>now.getMonth()),canNext=new Date(calY,calM+1,1)<=max;
- var h='<div class="ch"><button class="nv" id="pv"'+(canPrev?'':' disabled')+'>‹</button><b>'+first.toLocaleString("en",{month:"long",year:"numeric"})+'</b><button class="nv" id="nxm"'+(canNext?'':' disabled')+'>›</button></div><div class="cg">';
+ var h='<div class="ch"><button class="nv" type="button" id="pv" aria-label="Previous month"'+(canPrev?'':' disabled')+'>\u2039</button>'+
+   '<b>'+first.toLocaleString("en",{month:"long",year:"numeric"})+'</b>'+
+   '<button class="nv" type="button" id="nxm" aria-label="Next month"'+(canNext?'':' disabled')+'>\u203A</button></div><div class="cg">';
  ["M","T","W","T","F","S","S"].forEach(function(w){h+='<i class="wd">'+w+'</i>'});
  for(var b=0;b<sd;b++)h+='<i></i>';
- for(var d=1;d<=dim;d++){var dt=new Date(calY,calM,d),off=dt<=now||dt>max,sel=dt.getTime()===selTs;
-  h+='<button class="dy'+(sel?' sel':'')+'" data-t="'+dt.getTime()+'"'+(off?' disabled':'')+'>'+d+'</button>'}
+ for(var d=1;d<=dim;d++){
+  var dt=new Date(calY,calM,d),off=dt<=now||dt>max,sel=dt.getTime()===selTs;
+  h+='<button class="dy'+(sel?' sel':'')+'" type="button" data-t="'+dt.getTime()+'"'+(off?' disabled':'')+'>'+d+'</button>';
+ }
  el.innerHTML=h+'</div>';
  document.getElementById("pv").onclick=function(){calM--;if(calM<0){calM=11;calY--}buildCal(cb)};
  document.getElementById("nxm").onclick=function(){calM++;if(calM>11){calM=0;calY++}buildCal(cb)};
- [].forEach.call(el.querySelectorAll(".dy"),function(x){x.onclick=function(){
-  selTs=+x.dataset.t;day=new Date(selTs).toLocaleDateString("en-GB",{weekday:"long",day:"numeric",month:"long"});buildCal(cb);cb()}});
+ [].forEach.call(el.querySelectorAll(".dy"),function(x){
+  x.onclick=function(){
+   selTs=+x.dataset.t;
+   day=new Date(selTs).toLocaleDateString("en-GB",{weekday:"long",day:"numeric",month:"long"});
+   buildCal(cb);cb();
+  };
+ });
 }
 
 function hearts(n){
- var e=["💖","✨","☕","🥐","💫"];
+ if(window.matchMedia&&matchMedia("(prefers-reduced-motion:reduce)").matches)return;
+ var e=["\uD83D\uDC96","\u2728","\u2615","\uD83E\uDD50","\uD83D\uDCAB"];
  for(var i=0;i<n;i++)(function(i){setTimeout(function(){
   var s=document.createElement("span");s.className="heart";s.textContent=e[i%e.length];
   s.style.left=Math.random()*95+"vw";s.style.fontSize=(16+Math.random()*20)+"px";
-  document.body.appendChild(s);setTimeout(function(){s.remove()},3100)},i*110)})(i);
+  document.body.appendChild(s);setTimeout(function(){s.remove()},3100);
+ },i*110)})(i);
 }
 
-/* ------------------------------------------------------------------
+/* ==================================================================
    SENDING THE RESULT
-   Three independent routes, all with retries:
-     1. Netlify Forms   -> shows up in Netlify dashboard (+ email if you switch on a notification there)
-     2. ntfy push       -> instant phone alert (+ email copy)
-     3. Web3Forms       -> real email to you (only if you paste a key in CONFIG)
-   If every route fails she gets a "send it by email" button as a last resort.
-   ------------------------------------------------------------------ */
+   Four independent routes. First one that works is enough.
+   ================================================================== */
 function post(url,opts,tries,check){
  return fetch(url,opts).then(function(r){
    if(!r.ok)throw new Error("HTTP "+r.status);
@@ -1052,15 +585,14 @@ var sent=false;
 function notify(){
  if(sent)return;sent=true;
  var pref=answers[0]||"Not specified";
- var stamp=new Date().toLocaleString();
  var text=
-  userName+" said YES to a coffee date!\n\n"+
+  userName+" said YES to a coffee date.\n\n"+
   "Date: "+day+"\nTime: "+time+"\n\n"+
-  "Q1 (Coffee vibe): "+answers[0]+"\n"+
-  "Q2 (Perfect date): "+answers[1]+"\n"+
-  "Q3 (Ordering style): "+answers[2]+"\n"+
-  "Q4 (What's next): "+answers[3]+"\n\n"+
-  "Submitted: "+stamp;
+  "Q1 (coffee vibe): "+answers[0]+(picks[0]&&picks[0]!==answers[0]?"   [she actually tapped: "+picks[0]+"]":"")+"\n"+
+  "Q2 (perfect date): "+answers[1]+"\n"+
+  "Q3 (ordering style): "+answers[2]+"\n"+
+  "Q4 (what's next): "+answers[3]+"\n\n"+
+  "Submitted: "+new Date().toLocaleString();
 
  var form={
   "form-name":"coffee-response",
@@ -1071,21 +603,27 @@ function notify(){
   "message":text
  };
 
+ /* local copy first - works even with no network */
+ try{
+  var all=JSON.parse(localStorage.getItem("coffeeResponses")||"[]");
+  all.push({name:userName,date:day,time:time,coffeePref:pref,answers:answers,picks:picks,timestamp:new Date().toISOString()});
+  localStorage.setItem("coffeeResponses",JSON.stringify(all));
+ }catch(e){}
+
  var jobs=[];
 
- // 1. Netlify Forms
  jobs.push(post("/",{
    method:"POST",
    headers:{"Content-Type":"application/x-www-form-urlencoded"},
    body:new URLSearchParams(form).toString()
  },2));
 
- // 2. ntfy — sent as JSON so emoji and accents work (they break in HTTP headers)
+ /* ntfy as JSON: emoji and accents break when sent in HTTP headers */
  jobs.push(post("https://ntfy.sh/",{
    method:"POST",
    body:JSON.stringify({
      topic:CONFIG.ntfyTopic,
-     title:"☕ "+userName+" said YES to coffee!",
+     title:"\u2615 "+userName+" said YES to coffee",
      message:text,
      priority:5,
      tags:["coffee","heart"],
@@ -1093,14 +631,13 @@ function notify(){
    })
  },2));
 
- // 3. Web3Forms (real email) — only when a key is configured
  if(CONFIG.web3formsKey){
    jobs.push(post("https://api.web3forms.com/submit",{
      method:"POST",
      headers:{"Content-Type":"application/json","Accept":"application/json"},
      body:JSON.stringify({
        access_key:CONFIG.web3formsKey,
-       subject:"☕ "+userName+" said YES to coffee!",
+       subject:"\u2615 "+userName+" said YES to coffee",
        from_name:"Coffee Compatibility Test",
        name:userName,date:day,time:time,
        coffee_preference:pref,
@@ -1111,69 +648,22 @@ function notify(){
  }
 
  Promise.allSettled(jobs).then(function(res){
-   var ok=res.filter(function(r){return r.status==="fulfilled"}).length;
+   var ok=res.some(function(r){return r.status==="fulfilled"});
    var el=document.getElementById("sendstatus");
    if(!el)return;
-   if(ok>0){
-     el.textContent="✓ Sent";
-   }else{
-     var href="mailto:"+CONFIG.toEmail+"?subject="+encodeURIComponent("Coffee date: "+userName)+"&body="+encodeURIComponent(text);
-     el.innerHTML='Couldn\'t send automatically 😅<br><a href="'+href+'" style="color:var(--accent);font-weight:600">Tap here to email me your answers</a>';
-   }
+   if(ok){el.textContent="Sent \u2713";return}
+   var href="mailto:"+CONFIG.toEmail+
+     "?subject="+encodeURIComponent("Coffee date: "+userName)+
+     "&body="+encodeURIComponent(text);
+   el.innerHTML='That didn\u2019t send. <a href="'+href+'" style="color:var(--accent);font-weight:600">Tap here to email it instead</a>';
  });
 }
 
-/* ------------------------------------------------------------------
-   LOCK SCREEN (hold the cup)
-   ------------------------------------------------------------------ */
-function lock(){
- render('');app.className="card night";
- app.innerHTML='<p style="letter-spacing:2px;font-size:12px;text-transform:uppercase">New message</p><h1>Someone wants to ask you out</h1><div class="orb" id="orb"><span>☕</span></div><div class="bar"><i id="pb" style="width:0%"></i></div><p id="hint">Hold the coffee cup to read ☕</p>';
- var o=document.getElementById("orb"),h=document.getElementById("hint"),pb=document.getElementById("pb"),p=0,on=false,done=false;
- function tick(){
-  if(done)return;
-  p+=on?1.8:-3;p=Math.max(0,Math.min(100,p));
-  o.style.setProperty("--p",p);pb.style.width=p+"%";
-  h.textContent=p>66?"Almost there…":p>25?"Keep holding… ☕":"Hold the coffee cup to read ☕";
-  if(on&&navigator.vibrate&&p%20<2)try{navigator.vibrate(8)}catch(e){}
-  if(p>=100){done=true;unlocked();return}
-  requestAnimationFrame(tick);
- }
- // The very first touch is the one moment the browser lets music start — use it.
- o.onpointerdown=function(e){e.preventDefault();on=true;Music.go(0,true)};
- o.oncontextmenu=function(e){e.preventDefault()};
- ["pointerup","pointerleave","pointercancel"].forEach(function(t){o.addEventListener(t,function(){
-  if(on&&p<100&&p>10){o.classList.add("shake");setTimeout(function(){o.classList.remove("shake")},350)}on=false})});
- requestAnimationFrame(tick);
-}
-
-function unlocked(){
- hearts(24);
- app.innerHTML='<div class="type cur" id="ty"></div><button class="btn" id="c" style="display:none">I\'m curious ☕</button>';
- var lines="Hi Simran! 👋\n\nYou have been selected for a coffee date compatibility test ☕\n\nSomeone thinks we might have great chemistry over coffee…\n\nBut first, a quick test to confirm…",i=0,ty=document.getElementById("ty");
- (function nx(){
-  if(i<=lines.length){
-   ty.innerHTML=esc(lines.slice(0,i)).replace(/\n/g,"<br>");
-   i++;
-   setTimeout(nx,lines[i-2]==="\n"?250:45);
-  } else {
-   ty.classList.remove("cur");
-   var b=document.getElementById("c");
-   b.style.display="block";
-   b.onclick=function(){Music.go(0,true);intro()};   // tap = safe moment to (re)start the song
-  }
- })();
-}
-
-/* sparkle trail */
-document.addEventListener("pointermove",function(e){
- if(Math.random()>.35)return;
- var d=document.createElement("span");d.className="spark";d.style.left=e.clientX+"px";d.style.top=e.clientY+"px";
- document.body.appendChild(d);setTimeout(function(){d.remove()},800)});
-
-/* background coffee beans */
-(function(){
- var w=document.getElementById("beans");
+/* ==================================================================
+   AMBIENT
+   ================================================================== */
+(function beans(){
+ var w=document.getElementById("beans");if(!w)return;
  for(var i=0;i<12;i++){
   var b=document.createElement("i");b.className="bean";
   b.style.left=(Math.random()*100)+"vw";
@@ -1182,6 +672,20 @@ document.addEventListener("pointermove",function(e){
   b.style.transform="scale("+(.7+Math.random()*.9)+")";
   w.appendChild(b);
  }
+})();
+
+/* Sparkle trail: pointer devices only, throttled. The old version ran on
+   touchmove too, which spawned hundreds of nodes while she scrolled. */
+(function sparkles(){
+ if(!window.matchMedia||!matchMedia("(hover:hover) and (pointer:fine)").matches)return;
+ if(matchMedia("(prefers-reduced-motion:reduce)").matches)return;
+ var last=0;
+ document.addEventListener("pointermove",function(e){
+  var now=Date.now();if(now-last<60)return;last=now;
+  var d=document.createElement("span");d.className="spark";
+  d.style.left=e.clientX+"px";d.style.top=e.clientY+"px";
+  document.body.appendChild(d);setTimeout(function(){d.remove()},800);
+ },{passive:true});
 })();
 
 lock();
