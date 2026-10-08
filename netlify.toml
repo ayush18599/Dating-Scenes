@@ -1,7 +1,13 @@
 [build]
   publish = "."
 
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
+# No catch-all rewrite. The old "/*  ->  /index.html  200" rule sat in front of
+# every request including the POST that submits the form, which is a known way
+# to stop Netlify Forms from recording submissions. This is a single static
+# page, so there is no routing to rewrite in the first place.
+
+# Keep the helper pages off search engines and out of reach.
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
